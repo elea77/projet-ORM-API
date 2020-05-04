@@ -25,6 +25,7 @@ if __name__=='__main__':
 
 # On lance l’application à partir de la console (cmd et non un shell Python)
 # python path\to_appFlask.py
+#py -3 app.py / flask run / python3 app.py
 # Un message indique qu’un serveur web écoute sur l’interface locale sur le port 5000. On peut Vérifier le contenu de la page avec un navigateur web.
 
 
