@@ -2,6 +2,8 @@
 <html lang="fr">
 	<head>
         <link rel="icon" type="image/png" href="{{url_for('static', filename='images/logo2.png')}}" />
+        <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
+
     </head>
     <body>
         <img src="{{url_for('static', filename='images/logo.png')}}" width="150" />
@@ -10,6 +12,23 @@
             <input type="text" name="id" placeholder="Entrer l'id d'un film" id="">
             <button type="submit">Valider</button>
         </form>
+        <h3>Genres de films :</h3>
+        <div class="grid-genres">
+                {% for genre in genres %}
+                <ul>
+                    <li>{{ genre.name }}</li>
+                </ul>
+                {% endfor %}
+        </div>
+        <br><br>
+        <h3>Les mieux notés :</h3>
+        <div class="grid-top-rated">
+            {% for top in tops %}
+            <ul>
+                <li>{{ top.title }}</li>
+            </ul>
+            {% endfor %}
+    </div>
     </body>
 </html>
 

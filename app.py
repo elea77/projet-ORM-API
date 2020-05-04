@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import requests, json, urllib.request
 
 
@@ -12,7 +12,15 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     titre = "Ceci est la page d'accueil du site"
-    return render_template('pages/index.html', titre=titre)
+    r = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r.json()
+    genres = list(json_obj["genres"])
+
+    r2 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=us")
+    json_obj = r2.json()
+    tops = list(json_obj["results"])
+    
+    return render_template('pages/index.html', titre=titre, genres=genres, tops=tops)
 
 
 @app.route('/movie', methods=["GET","POST"])
@@ -20,8 +28,10 @@ def movie():
     movie_id = request.form.get("id")
     r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
-    name = str(json_obj['original_title'])
-    return render_template('pages/test.html', id=movie_id, url = r, name=name)
+    title = str(json_obj['original_title'])
+    overview = str(json_obj['overview'])
+    image = str(json_obj['poster_path']) 
+    return render_template('pages/test.html', id=movie_id, title=title, overview=overview, image = image)
 
     
 
