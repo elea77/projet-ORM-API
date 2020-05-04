@@ -13,6 +13,10 @@ app = Flask(__name__)
 def index():
     titre = "Ceci est la page d'accueil du site"
     return render_template('pages/index.html', titre=titre)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('pages/404.html')
     
 # L’application démarre à partir de cette ligne.
 if __name__=='__main__':
