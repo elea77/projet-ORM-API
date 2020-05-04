@@ -1,10 +1,10 @@
 # projet-orm-api
 <br>
 
-> git clone https://github.com/kpslm/projet-orm.git
+> git clone https://github.com/elea77/projet-orm-api.git
 <br>
 
-> cd /projet-orm
+> cd /projet-orm-api
 
 ## Windows
 
