@@ -5,6 +5,9 @@
 <br>
 
 > cd /projet-orm-api
+<br>
+
+> pip install -r requirements.txt
 
 ## Windows
 
