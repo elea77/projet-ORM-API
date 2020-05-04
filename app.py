@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+import requests
 
 
 # Instancier notre application dont le nom est __main__
