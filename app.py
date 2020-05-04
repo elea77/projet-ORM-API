@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-import requests
+from flask import Flask, render_template, request
+import requests, json, urllib.request
 
 
 # Instancier notre application dont le nom est __main__
@@ -13,6 +13,17 @@ app = Flask(__name__)
 def index():
     titre = "Ceci est la page d'accueil du site"
     return render_template('pages/index.html', titre=titre)
+
+
+@app.route('/movie', methods=["GET","POST"])
+def movie():
+    movie_id = request.form.get("id")
+    r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r.json()
+    name = str(json_obj['original_title'])
+    return render_template('pages/test.html', id=movie_id, url = r, name=name)
+
+    
 
 @app.errorhandler(404)
 def page_not_found(error):
