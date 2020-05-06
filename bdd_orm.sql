@@ -11,7 +11,7 @@ create table user (
 
 create table review (
     id_review 		        int             not null AUTO_INCREMENT,
-    review	                varchar(30)     not null,        
+    review	                text            not null,        
     date                    datetime        not null,
     id_user                 int             not null,
     constraint Pk_review primary key (id_review),
