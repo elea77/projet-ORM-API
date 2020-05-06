@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify
-import requests, json, urllib.request
+from flask_sqlalchemy import SQLAlchemy
+import requests, json
 
 
 # Instancier notre application dont le nom est __main__
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bdd_orm'
+db = SQLAlchemy(app)
 
 # API
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
