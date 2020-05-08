@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, logging, url_for, redirect
+from flask import Flask, render_template, request, session, logging, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from sqlalchemy.sql import func
@@ -102,8 +102,25 @@ def register():
     return render_template('pages/register.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=["GET","POST"])
 def login():
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
+            {'username':username}).fetchone()
+        passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
+            {'username':username}).fetchone()
+
+        for password_data in passworddata:
+            if sha256_crypt.verify(password, password_data):
+                flash("You are now login","success")
+                return redirect(url_for("index"))
+            else:
+                flash("Incorrect password","danger")
+                render_template('pages/login.html')
+
     return render_template('pages/login.html')
 
 
@@ -114,4 +131,12 @@ def page_not_found(error):
     
 
 if __name__=='__main__':
+    app.secret_key = '6590c29cf14027ffe0cf70d4c826f104'
     app.run(debug=True)
+    # L'objet app est configurable. On peut par exemple lui configurer sa clé secrète (qui sera indispensable pour sécuriser les sessions des visiteurs).
+    
+
+# On lance l’application à partir de la console (cmd et non un shell Python)
+# python path\to_appFlask.py
+# Un message indique qu’un serveur web écoute sur l’interface locale sur le port 5000. On peut Vérifier le contenu de la page avec un navigateur web.
+
