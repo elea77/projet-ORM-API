@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, session, logging, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from passlib.hash import sha256_crypt
 import requests, json
 
 
@@ -18,7 +19,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(50), unique=False, nullable=False)
-    avatar = db.Column(db.String(120), unique=False, nullable=False)
+    avatar = db.Column(db.String(120), unique=False, nullable=True)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
@@ -44,6 +45,7 @@ class Favorite_movie(db.Model):
 
     def __repr__(self):
         return '<Favorite_movie %r>' % self.id_movie
+
 
 # API
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
@@ -71,9 +73,34 @@ def movie():
     title = str(json_obj['original_title'])
     overview = str(json_obj['overview'])
     image = str(json_obj['poster_path']) 
-    return render_template('pages/test.html', id=movie_id, title=title, overview=overview, image = image)
+    return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image)
 
-    
+@app.route('/register', methods=["GET","POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        secure_password = sha256_crypt.encrypt(str(password))
+
+        if password == confirm:
+            db.execute('INSERT INTO user(usename, email, password) VALUES(:username, :email, :password)',
+                { 'username':username, 'email':email, 'password':secure_password })
+            db.commit()
+
+            return redirect(url_for('login'))
+        else:
+            return render_template('pages/register.html')
+
+    return render_template('pages/register.html')
+
+
+@app.route('/login')
+def login():
+    return render_template('pages/login.html')
+
+
 
 @app.errorhandler(404)
 def page_not_found(error):
