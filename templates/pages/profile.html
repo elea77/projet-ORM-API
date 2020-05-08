@@ -1,9 +1,8 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Login{% endblock %}
 {%- block styles %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 {%- endblock styles %}
-
 
 {% block body %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -20,11 +19,11 @@
         <li class="nav-item">
             <a class="nav-link" href="#">Film</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/profile">Profil</a>
-        </li>
         <li class="nav-item active">
-            <a class="nav-link" href="/register">Inscription <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/profile">Profil <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Inscription</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/login">Connexion</a>
@@ -33,24 +32,8 @@
     </div>
 </nav>
     <div class="container">
-        <h2>Inscription</h2><br>
-        <form action="register" method="post">
-            <div class="form-group">
-                <input class="form-control" type="text" name="username" placeholder="Username" required>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Password" required>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="confirm" placeholder="Confirm Password" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+        <h2>Profil</h2><br>
+        <p>{{ username }}</p>
+        <p>{{ email }}</p>
     </div>
 {% endblock %}
-    

@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, session, logging, url_for, redirect, flash
+from flask_login import login_manager, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from sqlalchemy.sql import func
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy import create_engine
 from passlib.hash import sha256_crypt
 import requests, json
 
@@ -13,10 +13,9 @@ import requests, json
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bdd_orm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 db = SQLAlchemy(app)
 Bootstrap(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,7 +55,7 @@ class Favorite_movie(db.Model):
 
 
 @app.route('/')
-def index():
+def home():
     titre = "Ceci est la page d'accueil du site"
     r = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
@@ -112,16 +111,41 @@ def login():
             {'username':username}).fetchone()
         passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
             {'username':username}).fetchone()
+        
 
         for password_data in passworddata:
             if sha256_crypt.verify(password, password_data):
                 flash("You are now login","success")
-                return redirect(url_for("index"))
+                session["username"] = username
+
+                email = db.session.execute('SELECT email FROM user WHERE username=:username',
+                    {'username':username})
+
+                session['email'] = email
+                session.modified = True
+                return redirect(url_for("profile"))
             else:
                 flash("Incorrect password","danger")
                 render_template('pages/login.html')
+    else :
+        if "username" in session:
+            return redirect(url_for("home"))
 
     return render_template('pages/login.html')
+
+@app.route('/profile')
+def profile():
+    if "username" in session:
+        username = session["username"]
+        email = session["email"]
+        return render_template('pages/profile.html', username=username, email=email)
+    return render_template('pages/profile.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("login"))
 
 
 
