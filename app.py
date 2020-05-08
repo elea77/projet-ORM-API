@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, session, logging, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 from sqlalchemy.sql import func
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import create_engine
 from passlib.hash import sha256_crypt
 import requests, json
 
@@ -11,8 +14,9 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bdd_orm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
 
+db = SQLAlchemy(app)
+Bootstrap(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,6 +78,8 @@ def movie():
     overview = str(json_obj['overview'])
     image = str(json_obj['poster_path']) 
     return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image)
+
+
 
 @app.route('/register', methods=["GET","POST"])
 def register():

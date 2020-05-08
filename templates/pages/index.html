@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-        <link rel="icon" type="image/png" href="{{url_for('static', filename='images/logo2.png')}}" />
-        <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
+{% extends "bootstrap/base.html" %}
+{% block title %}Accueil{% endblock %}
+{%- block styles %}
+    <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
+{%- endblock styles %}
 
-    </head>
-    <body>
+{% block body %}
+    <div class="container">
         <img src="{{url_for('static', filename='images/logo.png')}}" width="150" />
         <h1>{{ titre }} </h1>
         <form action="movie" method="POST">
@@ -28,7 +28,7 @@
                 <li>{{ top.title }}</li>
             </ul>
             {% endfor %}
+        </div>
     </div>
-    </body>
-</html>
+{% endblock %}
 

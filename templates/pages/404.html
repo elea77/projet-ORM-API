@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-        <link rel="icon" type="image/png" href="{{url_for('static', filename='images/logo2.png')}}" />
-    </head>
-    <body>
+{% extends "bootstrap/base.html" %}
+{% block title %}404{% endblock %}
+{%- block styles %}
+    <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
+{%- endblock styles %}
+
+{% block body %}
+    <div class="container">
         <h1>Salut mon pote, désolé cette page n'existe pas.</h1>
         <a href="http://127.0.0.1:5000/">Page d'accueil</a>
-    </body>
-</html>
+    </div>
+{% endblock %}
