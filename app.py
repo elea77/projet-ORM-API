@@ -70,11 +70,21 @@ def home():
     genres = list(json_obj["genres"])
 
     # Liste des films les mieux notés
-    r2 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=us")
+    r2 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
     json_obj = r2.json()
     tops = list(json_obj["results"])
-    
-    return render_template('pages/index.html', titre=titre, genres=genres, tops=tops)
+
+    # Liste des films populaire
+    r3 = requests.get("https://api.themoviedb.org/3/movie/popular?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r3.json()
+    populars = list(json_obj["results"])
+
+    # Liste des films bientot disponible
+    r4 = requests.get("https://api.themoviedb.org/3/movie/upcoming?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r4.json()
+    upcomings = list(json_obj["results"])
+
+    return render_template('pages/index.html', titre=titre, genres=genres, tops=tops, populars=populars, upcomings=upcomings)
 
 
 @app.route('/movie', methods=["GET","POST"])
@@ -90,7 +100,7 @@ def movie():
     genres = list(json_obj['genres'])
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
-    
+
     return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
 
 

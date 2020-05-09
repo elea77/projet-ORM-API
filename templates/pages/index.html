@@ -53,6 +53,27 @@
             {% for top in tops %}
             <ul>
                 <li>{{ top.title }}</li>
+                <img src="https://image.tmdb.org/t/p/w500{{top.poster_path}}" alt="" width="20%">
+            </ul>
+            {% endfor %}
+        </div>
+        <br><br>
+        <h3>Les plus populaires :</h3>
+        <div class="grid-top-rated">
+            {% for popular in populars %}
+            <ul>
+                <li>{{ popular.title }}</li>
+                <img src="https://image.tmdb.org/t/p/w500{{popular.poster_path}}" alt="" width="20%">
+            </ul>
+            {% endfor %}
+        </div>
+        <br><br>
+        <h3>Prochaines sorties :</h3>
+        <div class="grid-top-rated">
+            {% for upcoming in upcomings %}
+            <ul>
+                <li>{{ upcoming.title }}</li>
+                <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="" width="20%">
             </ul>
             {% endfor %}
         </div>
