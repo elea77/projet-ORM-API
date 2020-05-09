@@ -5,8 +5,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql import func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
-import requests, json
-
+import requests, json, datetime, random, os
 
 
 # Instancier notre application dont le nom est __main__
@@ -22,7 +21,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), unique=False, nullable=False)
-    avatar = db.Column(db.String(120), unique=False, nullable=True)
+    avatar = db.Column(db.String(120), unique=False, default='avatar.png', nullable=False)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
@@ -127,7 +126,17 @@ def login():
 
     return render_template('pages/login.html')
 
-@app.route('/profile')
+
+def save_images(file):
+    nb_random = random.randint(1,1000)
+    dateJ = datetime.datetime.today().strftime('%Y-%m-%d')
+    _, file_extension = os.path.splitext(file.filename)
+    file_name = nb_random + dateJ + file_extension
+    file_path = os.path.join(current_app.root_path, 'static/avatars', file_name)
+    file.save(file_path)
+    return file_name
+
+@app.route('/profile', methods=["GET","POST"])
 def profile():
     if "username" in session:
         username = session["username"]
@@ -138,6 +147,9 @@ def profile():
         datedata = db.session.execute("SELECT date FROM user WHERE username=:username", 
             {'username':username}).fetchone()
 
+        avatardata = db.session.execute("SELECT avatar FROM user WHERE username=:username", 
+            {'username':username}).fetchone()
+
         for email in emaildata:
             session["email"] = email
             email = session["email"]
@@ -146,8 +158,21 @@ def profile():
             session["date"] = date
             date = session["date"]
 
-        return render_template('pages/profile.html', username=username, email=email, date=date)
-    return render_template('pages/profile.html')
+        for avatar in avatardata:
+            session["avatar"] = avatar
+            avatar = session["avatar"]
+
+        if request.method == "POST":
+
+            avatar = save_images(request.files.get('file'))
+
+            avatardata = db.session.execute("UPDATE user SET avatar=:avatar WHERE username=:username", 
+            {'username':username, 'avatar':avatar})
+            db.session.commit()
+
+            return render_template('pages/profile.html')
+        return render_template('pages/profile.html', username=username, email=email, date=date, avatar=avatar)
+    return render_template('pages/login.html')
 
 
 @app.route('/logout')
