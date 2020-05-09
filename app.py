@@ -60,6 +60,7 @@ class Favorite_movie(db.Model):
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
 
 
+#Page d'accueil
 @app.route('/')
 def home():
     titre = "Ceci est la page d'accueil du site"
@@ -87,22 +88,44 @@ def home():
     return render_template('pages/index.html', titre=titre, genres=genres, tops=tops, populars=populars, upcomings=upcomings)
 
 
-@app.route('/movie', methods=["GET","POST"])
-def movie():
-    movie_id = request.form.get("id")
-    r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+# Recherche de film
+@app.route('/movie_search', methods=["GET","POST"])
+def movie_search():
+    # movie_id = request.form.get("id")
+    # r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    # json_obj = r.json()
+
+    movie_title = request.form.get("movie_title")
+    r = requests.get("https://api.themoviedb.org/3/search/movie?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&query=" + movie_title + "&page=1&include_adult=false&region=fr")
     json_obj = r.json()
 
     # Récupération des infos de l'API
-    title = str(json_obj['original_title'])
+    # title = str(json_obj['title'])
+    # overview = str(json_obj['overview'])
+    # image = str(json_obj['poster_path']) 
+    # genres = list(json_obj['genres'])
+    # note = str(json_obj['vote_average'])
+    # date = str(json_obj['release_date'])
+    results = list(json_obj['results'])
+
+    return render_template('pages/movieSearch.html', results=results, recherche=movie_title )
+    # return render_template('pages/movieSearch.html', id=movie_id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
+
+#Affichage des informations d'un film
+@app.route('/movie/<id>', methods=['GET'])
+def movie(id):
+    r = requests.get("https://api.themoviedb.org/3/movie/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r.json()
+
+    # Récupération des infos de l'API
+    title = str(json_obj['title'])
     overview = str(json_obj['overview'])
     image = str(json_obj['poster_path']) 
     genres = list(json_obj['genres'])
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
-    return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
-
+    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
 
 
 @app.route('/register', methods=["GET","POST"])

@@ -1,0 +1,54 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Movie Search{% endblock %}
+{%- block styles %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+{%- endblock styles %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='images/logo.png')}}" width="110" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Accueil</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="#">Film <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/profile">Profil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Inscription</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Connexion</a>
+        </li>
+    </ul>
+    </div>
+</nav>
+    <div class="container">
+        <h3>Éléments correspondant à la recherche "{{ recherche }}" :</h3><br>
+        <div id="grid">
+            {% for result in results %}
+                <ul>
+                    <li>{{ result.title }}</li>
+                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%">
+                </ul>
+            {% endfor %}
+        </div>
+    </div> 
+
+    <style>
+
+        #grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    </style>
+        
+{% endblock %}
