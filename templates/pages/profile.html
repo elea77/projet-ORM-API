@@ -36,12 +36,12 @@
         <p>Pseudo : {{ username }}</p>
         <p>Adresse mail : {{ email }}</p>
         <p>Date de création du compte : {{ date }}</p>
-        <img src="{{url_for('static', filename='avatars/' + avatar )}}" alt="" width="100"><br>
+        <img src="{{url_for('static', filename='avatars/' + avatar )}}" alt="" width="100"><br><br>
 
         <button id="change" class="btn btn-primary">Changer avatar</button><br><br>
 
         <div class="avatar" style="display: none;">
-            <form action="profile" method="post">
+            <form action="profile" method="post" enctype="multipart/form-data">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
@@ -56,6 +56,7 @@
                 </div>
             </form>
         </div>
+        <p>{{ filename }}</p>
     </div>
 
     <script>

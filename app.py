@@ -6,12 +6,19 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
 import requests, json, datetime, random, os
+from werkzeug.utils import secure_filename
 
+
+UPLOAD_FOLDER = 'static/avatars/'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 # Instancier notre application dont le nom est __main__
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/bdd_orm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = SQLAlchemy(app)
 Bootstrap(app)
 
@@ -127,14 +134,9 @@ def login():
     return render_template('pages/login.html')
 
 
-def save_images(file):
-    nb_random = random.randint(1,1000)
-    dateJ = datetime.datetime.today().strftime('%Y-%m-%d')
-    _, file_extension = os.path.splitext(file.filename)
-    file_name = nb_random + dateJ + file_extension
-    file_path = os.path.join(current_app.root_path, 'static/avatars', file_name)
-    file.save(file_path)
-    return file_name
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/profile', methods=["GET","POST"])
 def profile():
@@ -162,15 +164,21 @@ def profile():
             session["avatar"] = avatar
             avatar = session["avatar"]
 
-        if request.method == "POST":
+        if request.method == 'POST':
+            file = request.files['file']
 
-            avatar = save_images(request.files.get('file'))
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            avatardata = db.session.execute("UPDATE user SET avatar=:avatar WHERE username=:username", 
-            {'username':username, 'avatar':avatar})
-            db.session.commit()
+                db.session.execute('UPDATE user SET avatar=:filename WHERE username=:username',
+                    { 'username':username, 'filename':filename })
+                db.session.commit()
+                
+                return redirect(url_for('profile'))
 
-            return render_template('pages/profile.html')
+            return render_template('pages/profile.html', username=username, email=email, date=date, avatar=avatar)
+
         return render_template('pages/profile.html', username=username, email=email, date=date, avatar=avatar)
     return render_template('pages/login.html')
 
