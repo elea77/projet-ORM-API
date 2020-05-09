@@ -33,6 +33,13 @@
 </nav>
     <div class="container">
         <h3>{{ id }}</h3>
+        {% for genre in genres %}
+            <ul>
+                <li>{{ genre.name }}</li>
+            </ul>
+        {% endfor %}
+        <p>Note : {{ note }} / 10</p>
+        <p>Date de sortie : {{ date }}</p>
         <h1>{{ title }}</h1>
         <p>Résumé : {{ overview }}</p>
         <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="20%">

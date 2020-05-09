@@ -63,10 +63,13 @@ class Favorite_movie(db.Model):
 @app.route('/')
 def home():
     titre = "Ceci est la page d'accueil du site"
+
+    # Liste des genres de film
     r = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
     genres = list(json_obj["genres"])
 
+    # Liste des films les mieux notés
     r2 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=us")
     json_obj = r2.json()
     tops = list(json_obj["results"])
@@ -79,10 +82,16 @@ def movie():
     movie_id = request.form.get("id")
     r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
+
+    # Récupération des infos de l'API
     title = str(json_obj['original_title'])
     overview = str(json_obj['overview'])
     image = str(json_obj['poster_path']) 
-    return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image)
+    genres = list(json_obj['genres'])
+    note = str(json_obj['vote_average'])
+    date = str(json_obj['release_date'])
+    
+    return render_template('pages/movie.html', id=movie_id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
 
 
 
@@ -117,16 +126,16 @@ def login():
             {'username':username}).fetchone()
         passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
             {'username':username}).fetchone()
-        
+
 
         for password_data in passworddata:
             if sha256_crypt.verify(password, password_data):
-                flash("You are now login","success")
+                flash("Vous êtes maintenant connecté !","success")
                 session["username"] = username
                 return redirect(url_for("profile"))
             else:
-                flash("Incorrect password","danger")
-                render_template('pages/login.html')
+                flash("Mot de passe incorrect","error")
+                return render_template('pages/login.html')
     else :
         if "username" in session:
             return redirect(url_for("home"))
@@ -174,7 +183,7 @@ def profile():
                 db.session.execute('UPDATE user SET avatar=:filename WHERE username=:username',
                     { 'username':username, 'filename':filename })
                 db.session.commit()
-                
+
                 return redirect(url_for('profile'))
 
             return render_template('pages/profile.html', username=username, email=email, date=date, avatar=avatar)

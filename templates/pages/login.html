@@ -32,6 +32,18 @@
     </div>
 </nav>
     <div class="container">
+        <br>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <h2>Connexion</h2><br>
         <form action="login" method="post">
             <div class="form-group">
@@ -44,5 +56,6 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
+ 
     </div>
 {% endblock %}
