@@ -36,8 +36,9 @@
         <div id="grid">
             {% for result in results %}
                 <ul>
+                    <a href="/movie/{{result.id}}">
                     <li>{{ result.title }}</li>
-                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%">
+                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%"></a>
                 </ul>
             {% endfor %}
         </div>
