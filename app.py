@@ -111,17 +111,12 @@ def login():
             {'username':username}).fetchone()
         passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
             {'username':username}).fetchone()
-
-        # email = db.session.execute('SELECT email FROM user WHERE username=:username', 
-        #     {'username':username}).fetchone()
         
 
         for password_data in passworddata:
             if sha256_crypt.verify(password, password_data):
                 flash("You are now login","success")
                 session["username"] = username
-                # session["email"] = email
-                session.modified = True
                 return redirect(url_for("profile"))
             else:
                 flash("Incorrect password","danger")
@@ -136,9 +131,22 @@ def login():
 def profile():
     if "username" in session:
         username = session["username"]
-        # user = User.query.filter_by(username=username).first()
-        # email = session["email"]
-        return render_template('pages/profile.html', username=username)
+
+        emaildata = db.session.execute("SELECT email FROM user WHERE username=:username", 
+            {'username':username}).fetchone()
+
+        datedata = db.session.execute("SELECT date FROM user WHERE username=:username", 
+            {'username':username}).fetchone()
+
+        for email in emaildata:
+            session["email"] = email
+            email = session["email"]
+
+        for date in datedata:
+            session["date"] = date
+            date = session["date"]
+
+        return render_template('pages/profile.html', username=username, email=email, date=date)
     return render_template('pages/profile.html')
 
 
