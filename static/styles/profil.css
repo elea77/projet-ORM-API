@@ -1,0 +1,89 @@
+
+h1 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 45px;
+    line-height: 108px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+
+.pp {
+	width: 20%;
+	background-size: contain;
+	background-position: 50% 50%;
+	display: inline-block;
+	width: 170px;
+	height: 170px;
+	border: none;
+	-moz-border-radius: 95px;
+	-webkit-border-radius: 95px;
+	border-radius: 95px;
+}
+
+.pseudo {
+	text-align: center;
+	color: #7e7e7e;
+	padding-right: 200px;
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 30px;
+}
+
+
+.info {
+    color: white;
+    text-align: center;
+    padding-right: 200px;
+
+}
+
+.modif {
+    width: 175px;
+    height: 47px;
+    top: 755px;
+    font-size: large;
+    color: white;
+    background: #606060;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+	border-radius: 8px;
+}
+
+.esp {
+    display: block;
+    margin-left: auto;	
+    margin-right: auto;
+}
+
+.avatar {
+    width: 40%;
+    display: block;
+    margin-left: auto;	
+    margin-right: auto;
+}
+
+.enregistrer {
+    width: 100%;
+    display: block;
+    margin-left: auto;	
+    margin-right: auto;
+    text-align: center;
+}
+
+.submit {
+    width: 175px;
+    height: 47px;
+    width: 100px;
+    height: 35px;
+    top: 755px;
+    font-size: large;
+    color: white;
+    background: #606060;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+	border-radius: 8px;
+    margin-top: 10px;
+    text-align: center;
+}

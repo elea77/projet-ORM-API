@@ -1,0 +1,95 @@
+
+h1 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 45px;
+    line-height: 108px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+
+.inputs {
+    font-family: 'Poppins', sans-serif;
+    height: 40px;
+    width: 384px;
+    background: #f8f8f8;
+    border: 1px solid #ededed;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, .25);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.idt {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.esp {
+    text-align: center;
+    padding-bottom: 35px;
+}
+
+
+
+.imp {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    color: white;
+}
+
+.rem {
+    display: flex;
+    justify-content: center;
+    width: 384px;
+}
+
+.conf {
+    width: 384px;
+    height: 47px;
+    left: 478px;
+    top: 755px;
+    font-size: large;
+    color: white;
+    background: #606060;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+.passf {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.forget {
+    
+    display: flex;
+    justify-content: center;
+    width: 384px;
+}
+
+.register-link {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.register {
+    width: 180px;
+    height: 30px;
+    top: 872px;
+    font-size: 10px;
+    font-family: 'Poppins', sans-serif;
+    background: #F8F8F8;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+}

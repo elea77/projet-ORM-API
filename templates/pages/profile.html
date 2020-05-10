@@ -1,44 +1,44 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}Login{% endblock %}
 {%- block styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/profil.css" rel="stylesheet" type="text/css" />
+
 {%- endblock styles %}
 
-{% block body %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='images/logo.png')}}" width="110" /></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor02">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Accueil</a>
-            </li>
-            {% if session.username %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/collection">Collection</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/profile">Profil<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Deconnexion</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Inscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Connexion</a>
-                </li>
-            {% endif %}
-        </ul>
+{% block body %}
+    <header class="header__main">
+        <div class="header__logo">
+            <img src="{{url_for('static', filename='images/logo.png')}}" alt="logo">
         </div>
-    </nav>
-    <div class="container">
-        <br>
+
+        <div class="nav-list-container">
+            <nav class="header__nav">
+                <ul class="nav__list">
+
+                    <form action="movie_search" method="POST" class="form-inline">
+                        <input name="movie_title" class="form-control mr-sm-2" type="search" placeholder="Nom du film" aria-label="Search">
+                        <button class="btn btn-sm btn-outline-secondary my-2 my-sm-0" type="submit">Rechercher</button>
+                    </form>
+
+                    <li class="nav__item"><a href="/">Accueil</a></li>
+                    {% if session.username %}
+                    <li class="nav__item"><a href="/collection">Collection</a></li>
+                    <li class="nav__item"><a href="/profile">Profil</a></li>
+                    <li class="nav__item"><a href="/logout">Deconnexion</a></li>
+                    {% else %}
+                    <li class="nav__item"><a href="/register">Inscription</a></li>
+                    <li class="nav__item"><a href="/login">Connexion</a></li>
+                    {% endif %}   
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container mt-5">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class=flashes>
@@ -50,27 +50,43 @@
                 </ul>
             {% endif %}
         {% endwith %}
-        <h2>Profil</h2><br>
-        <p>Pseudo : {{ username }}</p>
-        <p>Adresse mail : {{ email }}</p>
-        <p>Date de création du compte : {{ date }}</p>
-        <img src="{{url_for('static', filename='avatars/' + avatar )}}" alt="" width="100"><br><br>
+        <h1>Profil</h1>
+    
+       <div class="row">
+           <div class="col-3">
 
-        <button id="change" class="btn btn-primary">Changer avatar</button><br><br>
+               <img class="pp" src="{{url_for('static', filename='avatars/' + avatar )}}" alt="">
 
-        <div class="avatar" style="display: none;">
+           </div>
+           <div class="col-8">
+               <h5 class="pseudo">Pseudo : {{ username }} </h5>
+
+               <div class="info">
+
+                   <h5>Adresse mail : {{ email }}</h5>
+                   <h5>Date de création du compte : {{ date }}</h5>
+
+               </div>
+           </div>
+
+           <div class="esp">
+               <button class="modif" id="change">Changer l'avatar</button>
+           </div>
+           
+       </div><br>
+       <div class="avatar" style="display: none;">
             <form action="profile" method="post" enctype="multipart/form-data">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                     </div>
                     <div class="custom-file">
-                    <input type="file" name="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <input type="file" name="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+                <div class="enregistrer">
+                    <button type="submit" class="submit">Modifier</button>
                 </div>
             </form>
         </div>

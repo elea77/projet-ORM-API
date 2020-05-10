@@ -1,59 +1,66 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Movie{% endblock %}
+{% block title %}Film{% endblock %}
 {%- block styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="../../static/styles/film.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
 {% block body %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='images/logo.png')}}" width="110" /></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarColor02">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Accueil<span class="sr-only">(current)</span></a>
-            </li>
-            {% if session.username %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/collection">Collection</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Deconnexion</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Inscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Connexion</a>
-                </li>
-            {% endif %}
-        </ul>
+    <header class="header__main">
+        <div class="header__logo">
+            <img src="{{url_for('static', filename='images/logo.png')}}" alt="logo">
         </div>
-    </nav>
-    <div class="container">
-        <h3>{{ id }}</h3>
-        {% for genre in genres %}
-            <ul>
-                <li>{{ genre.name }}</li>
-            </ul>
-        {% endfor %}
-        <p>Note : {{ note }} / 10</p>
-        <p>Date de sortie : {{ date }}</p>
-        <form action="" method="post">
-            <button type="submit">Ajouter à ma collection</button>
-        </form>
-        <h1>{{ title }}</h1>
-        <p>Résumé : {{ overview }}</p>
-        <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="20%">
-        <br>
 
-    </div> 
+        <div class="nav-list-container">
+            <nav class="header__nav">
+                <ul class="nav__list">
+
+                    <form action="movie_search" method="POST" class="form-inline">
+                        <input name="movie_title" class="form-control mr-sm-2" type="search" placeholder="Nom du film" aria-label="Search">
+                        <button class="btn btn-sm btn-outline-secondary my-2 my-sm-0" type="submit">Rechercher</button>
+                    </form>
+
+                    <li class="nav__item"><a href="/">Accueil</a></li>
+                    {% if session.username %}
+                    <li class="nav__item"><a href="/collection">Collection</a></li>
+                    <li class="nav__item"><a href="/profile">Profil</a></li>
+                    <li class="nav__item"><a href="/logout">Deconnexion</a></li>
+                    {% else %}
+                    <li class="nav__item"><a href="/register">Inscription</a></li>
+                    <li class="nav__item"><a href="/login">Connexion</a></li>
+                    {% endif %}   
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <div class="navf">
+            <ul class="nav nav-tabs">
+                {% for genre in genres %}
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">{{ genre.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul> 
+        </div>  
+
+        <div class="contenu">
+            <div>
+                <img src="https://image.tmdb.org/t/p/w500{{image}}"  class="img" alt="image">
+            </div>
+            <div class="texte">
+                <h1 class="title">{{ title }}</h1>
+                <p>{{ overview }}</p>
+                <p> Note : <br> {{ note }} / 10</p>
+                <p>Date de sortie : {{ date }}</p>
+                <form action="" method="post">
+                    <button type="submit" class="addBtn">Ajouter à ma collection</button>
+                </form>
+            </div>
+        </div><br>
+   </div>
         
 {% endblock %}

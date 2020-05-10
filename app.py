@@ -142,8 +142,10 @@ def movie(id):
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
 
 
+# Affichage des films de la collection
 @app.route('/collection')
 def collection():
+    test = "test"
     if "id_user" in session:
 
         id_user = session["id_user"]
@@ -160,8 +162,8 @@ def collection():
             title = str(json_obj['title'])
 
         return render_template('pages/collection.html', id_movie=id_movie, title=title, image=image)
-
-    return render_template('pages/collection.html')
+    
+    return render_template('pages/collection.html', test=test)
 
 
 
@@ -272,6 +274,7 @@ def profile():
 @app.route('/logout')
 def logout():
     session.pop("username", None)
+    session.pop("id_user", None)
     return redirect(url_for("login"))
 
 

@@ -1,44 +1,42 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}Login{% endblock %}
 {%- block styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="../../static/styles/login.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
 {% block body %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#"><img src="{{url_for('static', filename='images/logo.png')}}" width="110" /></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarColor02">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Accueil</a>
-            </li>
-            {% if session.username %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/collection">Collection</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Deconnexion</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Inscription</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/login">Connexion<span class="sr-only">(current)</span></a>
-                </li>
-            {% endif %}
-        </ul>
+    <header class="header__main">
+        <div class="header__logo">
+            <img src="{{url_for('static', filename='images/logo.png')}}" alt="logo">
         </div>
-    </nav>
-    <div class="container">
-        <br>
+
+        <div class="nav-list-container">
+            <nav class="header__nav">
+                <ul class="nav__list">
+
+                    <form action="movie_search" method="POST" class="form-inline">
+                        <input name="movie_title" class="form-control mr-sm-2" type="search" placeholder="Nom du film" aria-label="Search">
+                        <button class="btn btn-sm btn-outline-secondary my-2 my-sm-0" type="submit">Rechercher</button>
+                    </form>
+                    
+                    <li class="nav__item"><a href="/">Accueil</a></li>
+                    {% if session.username %}
+                    <li class="nav__item"><a href="/collection">Collection</a></li>
+                    <li class="nav__item"><a href="/profile">Profil</a></li>
+                    <li class="nav__item"><a href="/logout">Deconnexion</a></li>
+                    {% else %}
+                    <li class="nav__item"><a href="/register">Inscription</a></li>
+                    <li class="nav__item"><a href="/login">Connexion</a></li>
+                    {% endif %}   
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container mt-5">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class=flashes>
@@ -50,18 +48,24 @@
                 </ul>
             {% endif %}
         {% endwith %}
-        <h2>Connexion</h2><br>
+        <h1>Connexion</h1>
+    
         <form action="login" method="post">
-            <div class="form-group">
-                <input class="form-control" type="text" name="username" placeholder="Username" required>
+            <div class="idt">
+                <input class="inputs" placeholder="Identifiant" name="username" type="text">
             </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Password" required>
+        
+            <div class="esp">
+                <input class="inputs" placeholder="Mot de passe" name="password" type="password">
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
+        
+            <div class="esp">
+                <button class="conf" type="submit">Se connecter</button>
             </div>
         </form>
- 
+        <div class="register-link">
+            <button class="register"><a style="text-decoration: none; color:black;" href="/register">Pas de compte ? Inscrivez-vous</a></button>
+        </div>
+    
     </div>
 {% endblock %}
