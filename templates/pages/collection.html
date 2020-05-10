@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Movie{% endblock %}
+{% block title %}Movie Search{% endblock %}
 {%- block styles %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 {%- endblock styles %}
@@ -32,22 +32,20 @@
     </div>
 </nav>
     <div class="container">
-        <h3>{{ id }}</h3>
-        {% for genre in genres %}
-            <ul>
-                <li>{{ genre.name }}</li>
-            </ul>
-        {% endfor %}
-        <p>Note : {{ note }} / 10</p>
-        <p>Date de sortie : {{ date }}</p>
-        <form action="" method="post">
-            <button type="submit">Ajouter à ma collection</button>
-        </form>
-        <h1>{{ title }}</h1>
-        <p>Résumé : {{ overview }}</p>
-        <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="20%">
-        <br>
+        <h3>Ma collection</h3>
+        <div id="grid">
+            <div>
+            {{ id_movie }}
+            {{ title }}
+            <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="30%"></div>
+        </div>
+    </div>
 
-    </div> 
-        
+    <style>
+
+        #grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    </style>
 {% endblock %}

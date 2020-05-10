@@ -88,31 +88,22 @@ def home():
     return render_template('pages/index.html', titre=titre, genres=genres, tops=tops, populars=populars, upcomings=upcomings)
 
 
+
 # Recherche de film
 @app.route('/movie_search', methods=["GET","POST"])
 def movie_search():
-    # movie_id = request.form.get("id")
-    # r = requests.get("https://api.themoviedb.org/3/movie/" + movie_id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-    # json_obj = r.json()
 
     movie_title = request.form.get("movie_title")
     r = requests.get("https://api.themoviedb.org/3/search/movie?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&query=" + movie_title + "&page=1&include_adult=false&region=fr")
     json_obj = r.json()
-
-    # Récupération des infos de l'API
-    # title = str(json_obj['title'])
-    # overview = str(json_obj['overview'])
-    # image = str(json_obj['poster_path']) 
-    # genres = list(json_obj['genres'])
-    # note = str(json_obj['vote_average'])
-    # date = str(json_obj['release_date'])
     results = list(json_obj['results'])
 
     return render_template('pages/movieSearch.html', results=results, recherche=movie_title )
-    # return render_template('pages/movieSearch.html', id=movie_id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
+
+
 
 #Affichage des informations d'un film
-@app.route('/movie/<id>', methods=['GET'])
+@app.route('/movie/<id>', methods=["GET","POST"])
 def movie(id):
     r = requests.get("https://api.themoviedb.org/3/movie/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
@@ -125,7 +116,46 @@ def movie(id):
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
+    # Ajout d'un film à sa collection
+    if request.method == "POST":
+        if "username" in session:
+            username = session["username"]
+            iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
+                {'username':username}).fetchone()
+            
+            for id_user in iddata:
+                session["id_user"] = id_user
+                id_user = session["id_user"]
+
+            db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
+                { 'id':id, 'id_user':id_user })
+            db.session.commit()
+        
+        return redirect(url_for("collection"))
+
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
+
+
+@app.route('/collection')
+def collection():
+    if "username" in session:
+
+        id_user = session["id_user"]
+        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
+            {'id_user':id_user}).fetchone()
+        
+        for id_movie in iddata:
+            session["id_movie"] = id_movie
+            id_movie = str(session["id_movie"])
+
+            r = requests.get("https://api.themoviedb.org/3/movie/" + id_movie + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+            json_obj = r.json()
+            image = str(json_obj['poster_path']) 
+            title = str(json_obj['title'])
+
+        return render_template('pages/collection.html', id_movie=id_movie, title=title, image=image)
+
+    return render_template('pages/collection.html')
 
 
 @app.route('/register', methods=["GET","POST"])
@@ -149,6 +179,8 @@ def register():
     return render_template('pages/register.html')
 
 
+
+
 @app.route('/login', methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -159,7 +191,6 @@ def login():
             {'username':username}).fetchone()
         passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
             {'username':username}).fetchone()
-
 
         for password_data in passworddata:
             if sha256_crypt.verify(password, password_data):
@@ -174,6 +205,9 @@ def login():
             return redirect(url_for("home"))
 
     return render_template('pages/login.html')
+
+
+
 
 
 def allowed_file(filename):
@@ -223,6 +257,8 @@ def profile():
 
         return render_template('pages/profile.html', username=username, email=email, date=date, avatar=avatar)
     return render_template('pages/login.html')
+
+
 
 
 @app.route('/logout')
