@@ -184,6 +184,7 @@ def register():
 
             return redirect(url_for('login'))
         else:
+            flash('Les mots de passe ne correspondent pas')
             return render_template('pages/register.html')
 
     return render_template('pages/register.html')

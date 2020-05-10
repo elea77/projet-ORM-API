@@ -38,7 +38,17 @@
         </div>
     </header>
     <div class="container mt-5">
-
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         <h1>Inscription</h1>
     
         <form action="register" method="post">

@@ -41,11 +41,9 @@
         <div id="grid">
                 <ul>
                     <a href="/movie/{{id_movie}}">
-                    <li>{{ title }}</li>
-                    <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="60%">
-                    {% if not image.strip %}
-                    <img src="{{url_for('static', filename='images/no_picture.jpg')}}" alt="">
-                    {% endif %}</a>
+                        <li>{{ title }}</li>
+                        <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="60%">
+                    </a>
                 </ul>
         </div>
     </div> 

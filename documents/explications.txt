@@ -1,0 +1,4 @@
+L'utilisateur peut créer un compte, se connecter, changer son avatar.
+Il peut également ajouter un film à sa collection.
+
+Ce MCD est susceptible d'être amélioré par la suite.
