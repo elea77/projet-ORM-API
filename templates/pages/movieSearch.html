@@ -4,7 +4,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="../../static/styles/film.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/movieSearch.css" rel="stylesheet" type="text/css" />
     <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
@@ -43,18 +43,13 @@
                 <ul>
                     <a href="/movie/{{result.id}}">
                     <li>{{ result.title }}</li>
-                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%"></a>
+                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%">
+                    {% if not result.poster_path.strip %}
+                    <img src="{{url_for('static', filename='images/no_picture.jpg')}}" alt="">
+                    {% endif %}</a>
                 </ul>
             {% endfor %}
         </div>
     </div> 
-
-    <style>
-
-        #grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-        }
-    </style>
         
 {% endblock %}

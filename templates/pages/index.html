@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
     <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/accueil.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
 {% block body %}
@@ -36,64 +37,131 @@
             </nav>
         </div>
     </header>
-    <div class="container">
-        <h1>{{ titre }} </h1>
-        <form action="movie_search" method="POST">
-            <input type="text" name="movie_title" placeholder="Rechercher un film" id="">
-            <button type="submit">Valider</button>
-        </form>
-        <h3>Genres de films :</h3>
-        <div class="grid-genres">
-            {% for genre in genres %}
-            <ul>
-                <li>{{ genre.name }}</li>
-            </ul>
-            {% endfor %}
-        </div>
-        <br><br>
-        <h3>Films à l'affiche :</h3>
-        <div class="grid-top-rated">
-            {% for now in now_playing %}
-            <ul>
-                <a href="/movie/{{now.id}}">
-                <li>{{ now.title }}</li>
-                <img src="https://image.tmdb.org/t/p/w500{{now.poster_path}}" alt="" width="60%"></a>
-            </ul>
-            {% endfor %}
-        </div>
-        <br><br>
-        <h3>Les mieux notés :</h3>
-        <div class="grid-top-rated">
-            {% for top in tops %}
-            <ul>
-                <a href="/movie/{{top.id}}">
-                <li>{{ top.title }}</li>
-                <img src="https://image.tmdb.org/t/p/w500{{top.poster_path}}" alt="" width="60%"></a>
-            </ul>
-            {% endfor %}
-        </div>
-        <br><br>
-        <h3>Les plus populaires :</h3>
-        <div class="grid-top-rated">
-            {% for popular in populars %}
-            <ul>
-                <a href="/movie/{{popular.id}}">
-                <li>{{ popular.title }}</li>
-                <img src="https://image.tmdb.org/t/p/w500{{popular.poster_path}}" alt="" width="60%"></a>
-            </ul>
-            {% endfor %}
-        </div>
-        <br><br>
-        <h3>Prochaines sorties :</h3>
-        <div class="grid-top-rated">
-            {% for upcoming in upcomings %}
-            <ul>
-                <a href="/movie/{{upcoming.id}}">
-                <li>{{ upcoming.title }}</li>
-                <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="" width="60%"></a>
-            </ul>
-            {% endfor %}
-        </div>
+    <div class="container mt-5 ">
+
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img class="d-block w-100" src="img/ad.png" alt="First slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/ad2.png" alt="Second slide">
+              </div>
+              <div class="carousel-item">
+                <img class="d-block w-100" src="img/ad.png" alt="Third slide">
+              </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Precedent</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Suivant</span>
+            </a>
+          </div>
+
+
     </div>
+
+    
+    <br>
+    <br>
+    <br>
+    <div class="contenu">
+        <h2> Films à l'affiche </h2><br>
+        
+        <div class="all">
+            {% for now in now_playing %}
+            <div class="images">
+                
+                <a href="/movie/{{now.id}}">
+                <div class="categ">
+                    <img src="https://image.tmdb.org/t/p/w500{{now.poster_path}}" alt="">
+                    <div class="text">
+                        <p>{{ now.title }}</p>
+                    </div>
+                </div>
+                </a>  
+                
+            </div>
+            {% endfor %}
+        </div>
+        <br><br>
+        <h2> Les mieux notés </h2><br>
+        
+        <div class="all">
+            {% for top in tops %}
+            <div class="images">
+                
+                <a href="/movie/{{top.id}}">
+                <div class="categ">
+                    <img src="https://image.tmdb.org/t/p/w500{{top.poster_path}}" alt="">
+                    <div class="text">
+                        <p>{{ top.title }}</p>
+                    </div>
+                </div>
+                </a>  
+                
+            </div>
+            {% endfor %}
+        </div>
+
+        <br><br>
+        <h2> Les plus populaires </h2><br>
+        
+        <div class="all">
+            {% for popular in populars %}
+            <div class="images">
+                
+                <a href="/movie/{{popular.id}}">
+                <div class="categ">
+                    <img src="https://image.tmdb.org/t/p/w500{{popular.poster_path}}" alt="">
+                    <div class="text">
+                        <p>{{ popular.title }}</p>
+                    </div>
+                </div>
+                </a>  
+                
+            </div>
+            {% endfor %}
+        </div>
+
+        <br><br>
+        <h2> Prochaines sorties </h2><br>
+        
+        <div class="all">
+            {% for upcoming in upcomings %}
+                {% if upcoming.poster_path.strip %}
+                <div class="images">
+                    
+                    <a href="/movie/{{upcoming.id}}">
+                    <div class="categ">
+                        <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="">
+                        <div class="text">
+                            <p>{{ upcoming.title }}</p>
+                        </div>
+                    </div>
+                    </a>  
+                    
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+
+    <h3> Catégories </h3>
+
+    <div class="grid-genres">
+        {% for genre in genres %}
+        <ul>
+            <li>{{ genre.name }}</li>
+        </ul>
+        {% endfor %}
+    </div>
+
+    </div>
+
+
 {% endblock %}
 

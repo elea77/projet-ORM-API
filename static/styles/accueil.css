@@ -36,15 +36,21 @@
 
 .all {
 
-  display:grid;grid-template-columns:repeat(5,50%);
+  display:grid;
+  grid-template-columns:repeat(5,20%);
 
 }
+
+.all a {
+  text-decoration: none;
+}
+
 .images {
-    margin-left: 100px;
-    margin-right: 100px;
+    margin-left: 30px;
+    margin-right: 30px;
     column-gap: 30px;
     row-gap: 30px;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 .categ {
@@ -52,6 +58,9 @@
     height: 100%;
 }
 
+.contenu {
+  margin: 2%;
+}
 
 h2 {
   text-align: center;
@@ -59,7 +68,7 @@ h2 {
   font-family: 'Poppins', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 20px;
+  font-size: 30px;
   line-height: 22px;
 }
 
@@ -73,7 +82,6 @@ p {
 
 .categ img {
     width: 100%;
-    height: calc(100% - 34px);
 }
 
 .text {
@@ -97,18 +105,12 @@ h3 {
 }
 
 
+.grid-genres {
+  display: grid;
+  grid-template-columns: repeat(5,20%);
+}
+
 li {
-
-  display: inline;
-  justify-content: space-between;
-	list-style: none; /* pour enlever les puces sur IE7 */
-}
-
-li :hover{
-  text-decoration: none;
-  color: white;
-}
-
-a{
+  /* list-style: none; */
   color: white;
 }
