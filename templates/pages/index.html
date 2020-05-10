@@ -47,11 +47,22 @@
         </form>
         <h3>Genres de films :</h3>
         <div class="grid-genres">
-                {% for genre in genres %}
-                <ul>
-                    <li>{{ genre.name }}</li>
-                </ul>
-                {% endfor %}
+            {% for genre in genres %}
+            <ul>
+                <li>{{ genre.name }}</li>
+            </ul>
+            {% endfor %}
+        </div>
+        <br><br>
+        <h3>Films à l'affiche :</h3>
+        <div class="grid-top-rated">
+            {% for now in now_playing %}
+            <ul>
+                <a href="/movie/{{now.id}}">
+                <li>{{ now.title }}</li>
+                <img src="https://image.tmdb.org/t/p/w500{{now.poster_path}}" alt="" width="60%"></a>
+            </ul>
+            {% endfor %}
         </div>
         <br><br>
         <h3>Les mieux notés :</h3>

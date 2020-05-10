@@ -70,22 +70,27 @@ def home():
     json_obj = r.json()
     genres = list(json_obj["genres"])
 
-    # Liste des films les mieux notés
-    r2 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    # Liste des films à l'affiche
+    r2 = requests.get("https://api.themoviedb.org/3/movie/now_playing?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
     json_obj = r2.json()
+    now_playing = list(json_obj["results"])
+
+    # Liste des films les mieux notés
+    r3 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r3.json()
     tops = list(json_obj["results"])
 
     # Liste des films populaire
-    r3 = requests.get("https://api.themoviedb.org/3/movie/popular?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
-    json_obj = r3.json()
+    r4 = requests.get("https://api.themoviedb.org/3/movie/popular?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r4.json()
     populars = list(json_obj["results"])
 
     # Liste des films bientot disponible
-    r4 = requests.get("https://api.themoviedb.org/3/movie/upcoming?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
-    json_obj = r4.json()
+    r5 = requests.get("https://api.themoviedb.org/3/movie/upcoming?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r5.json()
     upcomings = list(json_obj["results"])
 
-    return render_template('pages/index.html', titre=titre, genres=genres, tops=tops, populars=populars, upcomings=upcomings)
+    return render_template('pages/index.html', titre=titre, genres=genres, now_playing=now_playing, tops=tops, populars=populars, upcomings=upcomings)
 
 
 
