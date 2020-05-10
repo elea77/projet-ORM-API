@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 
 UPLOAD_FOLDER = 'static/avatars/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 # Instancier notre application dont le nom est __main__
 app = Flask(__name__)
@@ -123,6 +123,7 @@ def movie(id):
             iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
                 {'username':username}).fetchone()
             
+
             for id_user in iddata:
                 session["id_user"] = id_user
                 id_user = session["id_user"]
@@ -138,7 +139,7 @@ def movie(id):
 
 @app.route('/collection')
 def collection():
-    if "username" in session:
+    if "id_user" in session:
 
         id_user = session["id_user"]
         iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
@@ -156,6 +157,8 @@ def collection():
         return render_template('pages/collection.html', id_movie=id_movie, title=title, image=image)
 
     return render_template('pages/collection.html')
+
+
 
 
 @app.route('/register', methods=["GET","POST"])
