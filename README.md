@@ -8,6 +8,10 @@
 <br>
 
 > pip install -r requirements.txt
+<br>
+
+> python
+> db.create_all()
 
 ## Windows
 
@@ -27,3 +31,11 @@
 > . venv/bin/activate
 ### Lancer le serveur
 > python3 app.py
+
+## Autres explications
+> Le MCD se trouve dans le dossier "documents"
+> Il est susceptible d'être amélioré par la suite
+
+
+### Activer MySQL sur Mac
+> sudo ln -s /Applications/MAMP/tmp/mysql/mysql.sock /tmp/mysql.sock

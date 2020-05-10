@@ -35,17 +35,6 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 
-class Review(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    review = db.Column(db.Text, unique=False, nullable=False)
-    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship("User", backref=db.backref("user", uselist=False))
-
-    def __repr__(self):
-        return '<Review %r>' % self.review
-
-
 class Favorite_movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_movie = db.Column(db.Integer, unique=False, nullable=False)
