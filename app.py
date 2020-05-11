@@ -149,6 +149,7 @@ def collection():
     if "id_user" in session:
 
         id_user = session["id_user"]
+        
         iddata = db.session.execute("SELECT distinct(id_movie) FROM favorite_movie WHERE user_id=:id_user", 
             {'id_user':id_user}).fetchall()
         
@@ -291,6 +292,14 @@ def login():
             if sha256_crypt.verify(password, password_data):
                 flash("Vous êtes maintenant connecté !","success")
                 session["username"] = username
+
+                iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
+                {'username':username}).fetchone()
+            
+                for id_user in iddata:
+                    session["id_user"] = id_user
+                    id_user = session["id_user"]
+
                 return redirect(url_for("profile"))
             else:
                 flash("Mot de passe incorrect","error")
