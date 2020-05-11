@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Profile{% endblock %}
 {%- block styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
@@ -54,9 +54,7 @@
     
        <div class="row">
            <div class="col-3">
-
-               <img class="pp" src="{{url_for('static', filename='avatars/' + avatar )}}" alt="">
-
+                <img class="pp" src="{{url_for('static', filename='avatars/' + avatar )}}" alt="">
            </div>
            <div class="col-8">
                <h5 class="pseudo">Pseudo : {{ username }} </h5>
