@@ -1,12 +1,33 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}404{% endblock %}
+{% block title %}Error 404{% endblock %}
 {%- block styles %}
-    <link href="../../static/styles/index.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Dosis&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="../../static/styles/ntfound.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
 {% block body %}
-    <div class="container">
-        <h1>Salut mon pote, désolé cette page n'existe pas.</h1>
-        <a href="http://127.0.0.1:5000/">Page d'accueil</a>
+
+
+    <h1> 404 </h1>
+
+        <h3> Lost in Space </h3>
+    
+
+    <p>Oooops, looks like the page you are trying to reach is no longer availaible. 
+        <br>
+        Please check the URL for proper spelling and capitalisation.
+        <br>
+        If you're having trouble locating a destination on PayJunction, try visiting the PayJunction home page.
+    </p>
+
+    <div class="btn-ctr">
+
+        <button class="home " type="submit"> <a href="/">    Home    </a></button>
+
     </div>
+
+    
 {% endblock %}

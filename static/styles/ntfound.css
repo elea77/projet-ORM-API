@@ -1,0 +1,77 @@
+body{
+
+    background-image: url("/static/images/background.png");
+
+}
+
+
+h1{
+    text-align: center;
+    color: white;
+    font-family: 'Dosis', sans-serif;
+    font-size: 85px;
+    padding-top: 150px;
+}
+
+h3{
+
+  text-align: center;
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 45px;
+  line-height: 108px;
+  font-weight: 700;
+ 
+ 
+}
+
+
+p{
+
+    text-align: center;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+
+
+}
+
+.btn-ctr{
+    text-align: center;
+    padding-top: 20px;
+}
+
+.home{
+
+    width: 150px;
+    height: 47px;
+    left: 278px;
+    top: 555px;
+    color: white;
+    background: #5c6631;
+    font-family: 'Fredoka One', cursive;
+    border-radius: 30px;
+
+}
+
+.back{
+
+    width: 150px;
+    height: 47px;
+    left: 278px;
+    top: 555px;
+    color: white;
+    background: black;
+    font-family: 'Fredoka One', cursive;
+    border-radius: 30px;
+
+}
+
+a {
+    color: white;
+	text-decoration: none;
+}
+
+a:hover {
+    color: white;
+	text-decoration: none;
+}
