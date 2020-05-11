@@ -45,6 +45,18 @@ class Favorite_movie(db.Model):
         return '<Favorite_movie %r>' % self.id_movie
 
 
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    review = db.Column(db.Text, unique=False, nullable=False)
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User", backref=db.backref("user", uselist=False))
+
+    def __repr__(self):
+        return '<Review %r>' % self.review
+
+
+
 # API
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
 
