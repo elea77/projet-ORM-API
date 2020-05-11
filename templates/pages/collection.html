@@ -37,14 +37,14 @@
         </div>
     </header>
     <div class="container"><br>
-        <h3 style="color:white;">Ma Collection :</h3><br>
+        <h3>Ma Collection :</h3><br>
         <div id="grid">
-                <ul>
-                    <a href="/movie/{{id_movie}}">
-                        <li>{{ title }}</li>
-                        <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="60%">
-                    </a>
-                </ul>
+            {% for image in images %}
+            <ul>     
+                <img src="https://image.tmdb.org/t/p/w500{{image}}" alt="" width="60%">
+            </ul>
+            {% endfor %}
         </div>
+
     </div> 
 {% endblock %}
