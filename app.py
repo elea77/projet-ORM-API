@@ -149,7 +149,7 @@ def collection():
     if "id_user" in session:
 
         id_user = session["id_user"]
-        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
+        iddata = db.session.execute("SELECT distinct(id_movie) FROM favorite_movie WHERE user_id=:id_user", 
             {'id_user':id_user}).fetchall()
         
         for id_mov in iddata:

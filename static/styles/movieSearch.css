@@ -1,6 +1,7 @@
 #grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    /* display: block; */
 }
 
 #grid a {
@@ -12,7 +13,27 @@
     list-style: none;
 }
 
+#grid ul {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    text-align: center;
+}
 
 .container {
     color: white;
+}
+
+h3 {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 22px;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
 }
