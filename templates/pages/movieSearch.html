@@ -41,12 +41,12 @@
         <div id="grid">
             {% for result in results %}
                 <ul>
-                    <a href="/movie/{{result.id}}">
-                    <li>{{ result.title }}</li>
+                    <a href="/movie/{{result.id}}">  
                     <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%">
                     {% if not result.poster_path.strip %}
                     <img src="{{url_for('static', filename='images/no_picture.jpg')}}" alt="">
                     {% endif %}</a>
+                    <li>{{ result.title }}</li>
                 </ul>
             {% endfor %}
         </div>

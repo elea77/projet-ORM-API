@@ -50,7 +50,12 @@ p{
     background: #5c6631;
     font-family: 'Fredoka One', cursive;
     border-radius: 30px;
+    outline: none;
 
+}
+
+.home:focus {
+    outline:none;
 }
 
 .back{
