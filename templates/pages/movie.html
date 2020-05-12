@@ -44,10 +44,12 @@
 
         <div class="contenu">
             <div>
-                {% if not image.strip %}
+                {% if image == 'None' %}
                     <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
-                {% endif %}</a>
-                <img src="https://image.tmdb.org/t/p/w500{{image}}" class="img" alt="image">
+                {% endif %}
+                {% if image != 'None' %}
+                    <img src="https://image.tmdb.org/t/p/w500{{image}}" class="img" alt="image">
+                {% endif %}
             </div>
             <div class="texte">
                 <h1 class="title">{{ title }}</h1>

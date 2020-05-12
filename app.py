@@ -122,6 +122,7 @@ def movie(id):
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
+
     # Ajout d'un film à sa collection
     if request.method == "POST":
         if "username" in session:
@@ -156,97 +157,24 @@ def collection():
         for id_mov in iddata:
 
             id_movie = [item['id_movie'] for item in iddata]
-            # i = 0
-            # title = id_movie[0]
-            # print(id_movie)
-        # liste = [278, 514847, 495764, 585244, 278, 585244, 35]
-        # for x in liste:
-        #     print(x)
-
-        # liste = []
 
         images = []
         titles = []
         for i in id_movie:
-            # x = id_movie[i]
-            # i = int(i)
-            # x ='test'
-            # print(id_movie[i])
-            # print(id_movie[i])
-
-        #     liste = []
-        #     liste.append(i)
-            # yield i
-            
-            # print(int(i))
             i = str(i)
             r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
             json_obj = r.json()
-            # x = list(json_obj)
             image = str(json_obj['poster_path'])
             title = str(json_obj['title'])
             images.append(image)
             titles.append(title)
-            # print(x[0])
-            # print('fin loop')
-            # return render_template('pages/collection.html', id_movie=id_movie, image=image)
-        print('fin')
-        print(images)
-        print(titles)
-        # print(x[1])
-        # title = 'tt'
-        # image ='r'
 
-        print(id_movie)
-        #     title = str(json_obj['title'])
-        #     print(i)
-                # print(id_movie[i])
-                # title = []
-                # title.append(id_movie[i])
-                # print(title)
-                # print(i)
-            
+        zipped = zip(id_movie,images, titles)
 
-                # i += 1
-            # title = [id_movie[i]]
-            # for test in id_movie:
-            #     # tests = id_movie[i]
-            #     tests = []
-            #     tests.append(id_movie[i])
-            #     image = 'jepg'
-            #     title='title'
-            #     i += 1
-            # x = 1
-            # for item in id_movie:
-            #     id = str(item[x])
-            #     r = requests.get("https://api.themoviedb.org/3/movie/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-            #     json_obj = r.json()
-            #     image = str(json_obj['poster_path'])
-            #     title = str(json_obj['title']) 
-            #     x +=1
-            # session["id_movie"] = id_movie
-            # id_movie = list(session["id_movie"])
-            # id_movie = list(id_movie)
-            # r = requests.get("https://api.themoviedb.org/3/movie/" + id_movie + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-            # json_obj = r.json()
-            # image = list(json_obj['poster_path']) 
-            # title = str(json_obj['title'])
-            # id_movie = []
-            # id_movie.append(id_mov)
-            # for lettre in id_movie:
-                
-                # lettre = item['id_movie']
-                # lettre = str(lettre)
-                # r = requests.get("https://api.themoviedb.org/3/movie/" + lettre + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-                # json_obj = r.json()
-                # image = str(json_obj['poster_path'])
-                # title = str(json_obj['title']) 
-            #     id_movie = lettre
-            # id_movie = str(id_mov["id_movie"])
-            # title = 'title'
-            # image = 'test.jpg'
+        liste = list(zipped)
 
-        return render_template('pages/collection.html', id_movie=id_movie, image=image, titles=titles, images=images)
+
+        return render_template('pages/collection.html', id_movie=id_movie, liste=liste)
     
     return render_template('pages/collection.html')
 
