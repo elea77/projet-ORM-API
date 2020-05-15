@@ -147,31 +147,41 @@ def movie(id):
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
+    id_user = session["id_user"]
+
+    # Verifier si le film fait parti de la collection 
+    iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id", 
+        { 'id':id, 'id_user':id_user}).fetchall()
+        
+    if iddata :
+        message = 'True' # Le film est deja dans la collection
+    else :
+        message = 'False' # Le film n'est pas dans la collection
 
     # Ajout d'un film à sa collection
     if request.method == "POST":
-        if "username" in session:
-            username = session["username"]
-            iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
-                {'username':username}).fetchone()
-            
+        if "id_user" in session:
+            bouton = request.form.get('btn')
+            if bouton == 'add' :
+                
+                favorite_movie = db.session.execute('SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
+                    { 'id':id, 'id_user':id_user }).fetchone()
 
-            for id_user in iddata:
-                session["id_user"] = id_user
-                id_user = session["id_user"]
-            
-            favorite_movie = db.session.execute('SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
-                { 'id':id, 'id_user':id_user }).fetchone()
+                if favorite_movie == None :
 
-            if favorite_movie == None :
+                    db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
+                        { 'id':id, 'id_user':id_user })
+                    db.session.commit()
+            if bouton == 'del':
 
-                db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
-                    { 'id':id, 'id_user':id_user })
+                favorite_movie = db.session.execute('DELETE FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
+                { 'id':id, 'id_user':id_user })
+
                 db.session.commit()
-        
+                
         return redirect(url_for("collection"))
 
-    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
+    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message)
 
 
 # Affichage des films de la collection <=> Favorite Movies

@@ -56,9 +56,15 @@
                 <p> Note : <br> {{ note }} / 10</p>
                 <p>Date de sortie : {{ date }}</p>
                 {% if session.username %}
-                    <form action="" method="post">
-                        <button type="submit" class="addBtn">Ajouter à ma collection</button>
-                    </form>
+                    {% if message == 'False' %}
+                        <form action="" method="post">
+                            <button type="submit" class="addBtn" name="btn" value="add">Ajouter à ma collection</button>
+                        </form>
+                    {% else %}
+                        <form action="" method="post">
+                            <button type="submit" class="addBtn" name="btn" value="del">Enlever de ma collection</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div><br>
