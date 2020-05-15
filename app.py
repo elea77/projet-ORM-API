@@ -215,15 +215,31 @@ def register():
         confirm = request.form.get('confirm')
         secure_password = sha256_crypt.encrypt(str(password))
 
-        if password == confirm:
-            db.session.execute('INSERT INTO user(username, email, password) VALUES(:username, :email, :password)',
-                { 'username':username, 'email':email, 'password':secure_password })
-            db.session.commit()
+        usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
+            {'username':username}).fetchone()
+        
+        if usernamedata == None :
 
-            return redirect(url_for('login'))
-        else:
-            flash('Les mots de passe ne correspondent pas')
-            return render_template('pages/register.html')
+            emaildata = db.session.execute('SELECT email FROM user WHERE email=:email', 
+            {'email':email}).fetchone()
+
+            if emaildata == None :
+
+                if password == confirm:
+                    db.session.execute('INSERT INTO user(username, email, password) VALUES(:username, :email, :password)',
+                        { 'username':username, 'email':email, 'password':secure_password })
+                    db.session.commit()
+
+                    return redirect(url_for('login'))
+                else:
+                    flash('Les mots de passe ne correspondent pas')
+                    return redirect(url_for("register"))
+            else :
+                flash('Cette adresse email est déjà prise')
+                return redirect(url_for("register"))
+        else :
+            flash('Ce pseudo est déjà pris')
+            return redirect(url_for("register"))
 
     return render_template('pages/register.html')
 
@@ -239,30 +255,30 @@ def login():
         usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
             {'username':username}).fetchone()
 
-        if usernamedata == None:
+        if usernamedata != None:
+            
+            passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
+                {'username':username}).fetchone()
+
+            for password_data in passworddata:
+                if sha256_crypt.verify(password, password_data):
+                    flash("Vous êtes maintenant connecté !","success")
+                    session["username"] = username
+
+                    iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
+                    {'username':username}).fetchone()
+                
+                    for id_user in iddata:
+                        session["id_user"] = id_user
+                        id_user = session["id_user"]
+
+                    return redirect(url_for("profile"))
+                else :
+                    flash("Mot de passe incorrect","error")
+                    return redirect(url_for("login"))
+        else :
             flash("Pseudo inexistant","error")
             return redirect(url_for("login"))
-        
-
-        passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
-            {'username':username}).fetchone()
-
-        for password_data in passworddata:
-            if sha256_crypt.verify(password, password_data):
-                flash("Vous êtes maintenant connecté !","success")
-                session["username"] = username
-
-                iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
-                {'username':username}).fetchone()
-            
-                for id_user in iddata:
-                    session["id_user"] = id_user
-                    id_user = session["id_user"]
-
-                return redirect(url_for("profile"))
-            else:
-                flash("Mot de passe incorrect","error")
-                return redirect(url_for("login"))
     else :
         if "username" in session:
             return redirect(url_for("home"))
