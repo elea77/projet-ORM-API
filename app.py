@@ -159,47 +159,58 @@ def movie(id):
             for id_user in iddata:
                 session["id_user"] = id_user
                 id_user = session["id_user"]
+            
+            favorite_movie = db.session.execute('SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
+                { 'id':id, 'id_user':id_user }).fetchone()
 
-            db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
-                { 'id':id, 'id_user':id_user })
-            db.session.commit()
+            if favorite_movie == None :
+
+                db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
+                    { 'id':id, 'id_user':id_user })
+                db.session.commit()
         
         return redirect(url_for("collection"))
 
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date)
 
 
-# Affichage des films de la collection
+# Affichage des films de la collection <=> Favorite Movies
 @app.route('/collection')
 def collection():
     if "id_user" in session:
 
         id_user = session["id_user"]
         
-        iddata = db.session.execute("SELECT distinct(id_movie) FROM favorite_movie WHERE user_id=:id_user", 
+        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
             {'id_user':id_user}).fetchall()
         
-        for id_mov in iddata:
+        if not iddata :
+            message = 'Votre collection est vide'
+            return render_template('pages/collection.html', message=message)
+        
+        else:
+            for id_mov in iddata:
 
-            id_movie = [item['id_movie'] for item in iddata]
+                id_movie = [item['id_movie'] for item in iddata]
 
-        images = []
-        titles = []
-        for i in id_movie:
-            i = str(i)
-            r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-            json_obj = r.json()
-            image = str(json_obj['poster_path'])
-            title = str(json_obj['title'])
-            images.append(image)
-            titles.append(title)
+            images = []
+            titles = []
+            for i in id_movie:
+                i = str(i)
+                r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+                json_obj = r.json()
+                image = str(json_obj['poster_path'])
+                title = str(json_obj['title'])
+                images.append(image)
+                titles.append(title)
 
-        zipped = zip(id_movie,images, titles)
+            zipped = zip(id_movie,images, titles)
 
-        liste = list(zipped)
-
+            liste = list(zipped)
 
         return render_template('pages/collection.html', id_movie=id_movie, liste=liste)
+    else :
+        return redirect(url_for('login'))
     
     return render_template('pages/collection.html')
 
