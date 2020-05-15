@@ -85,7 +85,11 @@
                 
                 <a href="/movie/{{now.id}}">
                 <div class="categ">
+                    {% if not now.poster_path.strip %}
+                        <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                    {% else %}
                     <img src="https://image.tmdb.org/t/p/w500{{now.poster_path}}" alt="">
+                    {% endif %}
                     <div class="text">
                         <p>{{ now.title }}</p>
                     </div>
@@ -104,7 +108,11 @@
                 
                 <a href="/movie/{{top.id}}">
                 <div class="categ">
+                    {% if not top.poster_path.strip %}
+                        <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                    {% else %}
                     <img src="https://image.tmdb.org/t/p/w500{{top.poster_path}}" alt="">
+                    {% endif %}
                     <div class="text">
                         <p>{{ top.title }}</p>
                     </div>
@@ -124,7 +132,11 @@
                 
                 <a href="/movie/{{popular.id}}">
                 <div class="categ">
+                    {% if not popular.poster_path.strip %}
+                        <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                    {% else %}
                     <img src="https://image.tmdb.org/t/p/w500{{popular.poster_path}}" alt="">
+                    {% endif %}
                     <div class="text">
                         <p>{{ popular.title }}</p>
                     </div>
@@ -140,12 +152,15 @@
         
         <div class="all">
             {% for upcoming in upcomings %}
-                {% if upcoming.poster_path.strip %}
                 <div class="images">
                     
                     <a href="/movie/{{upcoming.id}}">
                     <div class="categ">
+                        {% if not upcoming.poster_path.strip %}
+                            <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                        {% else %}
                         <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="">
+                        {% endif %}
                         <div class="text">
                             <p>{{ upcoming.title }}</p>
                         </div>
@@ -153,7 +168,6 @@
                     </a>  
                     
                 </div>
-                {% endif %}
             {% endfor %}
         </div>
     
