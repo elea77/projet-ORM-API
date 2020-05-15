@@ -29,7 +29,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), unique=False, nullable=False)
-    avatar = db.Column(db.String(120), unique=False, default='avatar.png', nullable=False)
+    avatar = db.Column(db.String(120), unique=False, server_default="avatar.png", nullable=False)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
@@ -48,10 +48,13 @@ class Favorite_movie(db.Model):
 
 # class User_Movie(db.Model):
 #     __tablename__ = 'user_movie'
+#     id = db.Column(db.Integer, primary_key=True)
 #     user_id = db.Column(db.Integer, primary_key=True)
 #     user_id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 #     user = db.relationship("User", backref=db.backref("user", uselist=False))
-#     movie = db.relationship("Movie", backref=db.backref("movie", uselist=False))
+#     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
+#     user = db.relationship("Movie", backref=db.backref("movie", uselist=False))
 
 #     def __repr__(self):
 #         return '<User_Movie %r>' % self.movie_id
@@ -60,27 +63,18 @@ class Favorite_movie(db.Model):
 
 # class Movie(db.Model):
 #     __tablename__ = 'movie'
-#     id = db.Column(db.Integer, unique=False, nullable=False)
+#     id = db.Column(db.Integer, primary_key=True)
 #     title = db.Column(db.String(80), unique=True, nullable=False)
 #     overview = db.Column(db.Text, unique=True, nullable=False)
-#     poster_path = db.Column(db.String(80), unique=True, nullable=True)
 
 #     def __repr__(self):
-#         return '<Movie %r>' % self.title
+#         return '<Movie %r>' % self.id
 
 
-# class Review(db.Model):
-#     __tablename__ = 'review'
-#     id = db.Column(db.Integer, primary_key=True)
-#     review = db.Column(db.Text, unique=False, nullable=False)
-#     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     user = db.relationship("User", backref=db.backref("user", uselist=False))
-
-#     def __repr__(self):
-#         return '<Review %r>' % self.review
-
-
+# user_movie = db.Table('user_movie',
+#     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+#     db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True)
+# )
 
 # API
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
@@ -158,20 +152,19 @@ def movie(id):
     else :
         message = 'False' # Le film n'est pas dans la collection
 
-    # Ajout d'un film à sa collection
+
+    # Ajout ou Suprression d'un film de sa collection
     if request.method == "POST":
         if "id_user" in session:
             bouton = request.form.get('btn')
+
             if bouton == 'add' :
-                
-                favorite_movie = db.session.execute('SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
-                    { 'id':id, 'id_user':id_user }).fetchone()
+        
+                db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
+                    { 'id':id, 'id_user':id_user })
+                db.session.commit()
 
-                if favorite_movie == None :
 
-                    db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
-                        { 'id':id, 'id_user':id_user })
-                    db.session.commit()
             if bouton == 'del':
 
                 favorite_movie = db.session.execute('DELETE FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
