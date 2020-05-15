@@ -86,7 +86,7 @@ class Favorite_movie(db.Model):
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
 
 
-#Page d'accueil
+#Page d'accueil : index.html
 @app.route('/')
 def home():
     titre = "Ceci est la page d'accueil du site"
