@@ -46,17 +46,39 @@ class Favorite_movie(db.Model):
     def __repr__(self):
         return '<Favorite_movie %r>' % self.id_movie
 
+# class User_Movie(db.Model):
+#     __tablename__ = 'user_movie'
+#     user_id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, primary_key=True)
+#     user = db.relationship("User", backref=db.backref("user", uselist=False))
+#     movie = db.relationship("Movie", backref=db.backref("movie", uselist=False))
 
-class Review(db.Model):
-    __tablename__ = 'review'
-    id = db.Column(db.Integer, primary_key=True)
-    review = db.Column(db.Text, unique=False, nullable=False)
-    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship("User", backref=db.backref("user", uselist=False))
+#     def __repr__(self):
+#         return '<User_Movie %r>' % self.movie_id
+#         return '<User_Movie %r>' % self.user_id
 
-    def __repr__(self):
-        return '<Review %r>' % self.review
+
+# class Movie(db.Model):
+#     __tablename__ = 'movie'
+#     id = db.Column(db.Integer, unique=False, nullable=False)
+#     title = db.Column(db.String(80), unique=True, nullable=False)
+#     overview = db.Column(db.Text, unique=True, nullable=False)
+#     poster_path = db.Column(db.String(80), unique=True, nullable=True)
+
+#     def __repr__(self):
+#         return '<Movie %r>' % self.title
+
+
+# class Review(db.Model):
+#     __tablename__ = 'review'
+#     id = db.Column(db.Integer, primary_key=True)
+#     review = db.Column(db.Text, unique=False, nullable=False)
+#     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#     user = db.relationship("User", backref=db.backref("user", uselist=False))
+
+#     def __repr__(self):
+#         return '<Review %r>' % self.review
 
 
 
@@ -216,6 +238,12 @@ def login():
 
         usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
             {'username':username}).fetchone()
+
+        if usernamedata == None:
+            flash("Pseudo inexistant","error")
+            return redirect(url_for("login"))
+        
+
         passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
             {'username':username}).fetchone()
 
@@ -234,7 +262,7 @@ def login():
                 return redirect(url_for("profile"))
             else:
                 flash("Mot de passe incorrect","error")
-                return render_template('pages/login.html')
+                return redirect(url_for("login"))
     else :
         if "username" in session:
             return redirect(url_for("home"))
