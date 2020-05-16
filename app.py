@@ -28,8 +28,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), unique=False, nullable=False)
-    avatar = db.Column(db.String(120), unique=False, server_default="avatar.png", nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    avatar = db.Column(db.String(120), server_default="avatar.png", nullable=False)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
@@ -39,8 +39,8 @@ class User(db.Model):
 class Movie(db.Model):
     __tablename__ = 'movie'
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    title = db.Column(db.String(80), unique=True, nullable=False)
-    overview = db.Column(db.String(500), unique=True, nullable=True)
+    title = db.Column(db.String(80), nullable=False)
+    overview = db.Column(db.Text(1200), nullable=True)
 
     def __repr__(self):
         return '<Movie %r>' % self.title
@@ -53,7 +53,6 @@ class User_Movie(db.Model):
 
     def __repr__(self):
         return '<User_Movie %r>' % self.movie_id
-
 
 
 # API
@@ -129,7 +128,9 @@ def movie(id):
 
         # Verifier si le film fait parti de la collection 
         iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id AND movie_id=:id", 
-            { 'id':id, 'user_id':user_id}).fetchall()
+            { 'id':id, 'user_id':user_id}).fetchone()
+
+        # session.query (Movie) . 
         
         if iddata :
             message = 'True' # Le film est deja dans la collection
@@ -145,7 +146,7 @@ def movie(id):
             if bouton == 'add' :
 
                 movie = db.session.execute("SELECT id FROM movie WHERE id=:id", 
-                    { 'id':id}).fetchall()
+                    { 'id':id}).fetchone()
         
                 if not movie :
                     db.session.execute('INSERT INTO movie(id, title, overview) VALUES(:id, :title, :overview)',
@@ -223,6 +224,7 @@ def register():
 
         usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
             {'username':username}).fetchone()
+
         
         if usernamedata == None :
 
