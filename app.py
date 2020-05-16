@@ -36,49 +36,28 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 
-class Favorite_movie(db.Model):
-    __tablename__ = 'favorite_movie'
-    id = db.Column(db.Integer, primary_key=True)
-    id_movie = db.Column(db.Integer, unique=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship("User", backref=db.backref("user", uselist=False))
+class Movie(db.Model):
+    __tablename__ = 'movie'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    title = db.Column(db.String(80), unique=True, nullable=False)
+    overview = db.Column(db.String(500), unique=True, nullable=True)
 
     def __repr__(self):
-        return '<Favorite_movie %r>' % self.id_movie
-
-# class User_Movie(db.Model):
-#     __tablename__ = 'user_movie'
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     user = db.relationship("User", backref=db.backref("user", uselist=False))
-#     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
-#     user = db.relationship("Movie", backref=db.backref("movie", uselist=False))
-
-#     def __repr__(self):
-#         return '<User_Movie %r>' % self.movie_id
-#         return '<User_Movie %r>' % self.user_id
+        return '<Movie %r>' % self.title
 
 
-# class Movie(db.Model):
-#     __tablename__ = 'movie'
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(80), unique=True, nullable=False)
-#     overview = db.Column(db.Text, unique=True, nullable=False)
+class User_Movie(db.Model):
+    __tablename__ = 'user_movie'
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True) 
 
-#     def __repr__(self):
-#         return '<Movie %r>' % self.id
+    def __repr__(self):
+        return '<User_Movie %r>' % self.movie_id
 
 
-# user_movie = db.Table('user_movie',
-#     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-#     db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True)
-# )
 
 # API
 # r = requests.get('https://api.themoviedb.org/3/movie/550?api_key=6590c29cf14027ffe0cf70d4c826f104&append_to_response=videos,images')
-
 
 
 
@@ -145,12 +124,12 @@ def movie(id):
 
     message = 'Null'
 
-    if 'id_user' in session :
-        id_user = session["id_user"]
+    if 'user_id' in session :
+        user_id = session["user_id"]
 
         # Verifier si le film fait parti de la collection 
-        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id", 
-            { 'id':id, 'id_user':id_user}).fetchall()
+        iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id AND movie_id=:id", 
+            { 'id':id, 'user_id':user_id}).fetchall()
         
         if iddata :
             message = 'True' # Le film est deja dans la collection
@@ -160,20 +139,28 @@ def movie(id):
 
     # Ajout ou Suprression d'un film de sa collection
     if request.method == "POST":
-        if "id_user" in session:
+        if "user_id" in session:
             bouton = request.form.get('btn')
 
             if bouton == 'add' :
+
+                movie = db.session.execute("SELECT id FROM movie WHERE id=:id", 
+                    { 'id':id}).fetchall()
         
-                db.session.execute('INSERT INTO favorite_movie(id_movie, user_id) VALUES(:id, :id_user)',
-                    { 'id':id, 'id_user':id_user })
-                db.session.commit()
+                if not movie :
+                    db.session.execute('INSERT INTO movie(id, title, overview) VALUES(:id, :title, :overview)',
+                    { 'id':id, 'title':title, 'overview':overview })
+
+                db.session.execute('INSERT INTO user_movie(movie_id, user_id) VALUES(:id, :user_id)',
+                    { 'id':id, 'user_id':user_id })
+
+                db.session.commit()  
 
 
             if bouton == 'del':
 
-                favorite_movie = db.session.execute('DELETE FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
-                { 'id':id, 'id_user':id_user })
+                user_movie = db.session.execute('DELETE FROM user_movie WHERE user_id=:user_id AND movie_id=:id', 
+                { 'id':id, 'user_id':user_id })
                 db.session.commit()
                 
         return redirect(url_for("collection"))
@@ -184,12 +171,12 @@ def movie(id):
 # Affichage des films de la collection <=> Favorite Movies
 @app.route('/collection')
 def collection():
-    if "id_user" in session:
+    if "user_id" in session:
 
-        id_user = session["id_user"]
+        user_id = session["user_id"]
         
-        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
-            {'id_user':id_user}).fetchall()
+        iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id", 
+            {'user_id':user_id}).fetchall()
 
         
         if not iddata :
@@ -199,11 +186,11 @@ def collection():
         else:
             for id_mov in iddata:
 
-                id_movie = [item['id_movie'] for item in iddata]
+                movie_id = [item['movie_id'] for item in iddata]
 
             images = []
             titles = []
-            for i in id_movie:
+            for i in movie_id:
                 i = str(i)
                 r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
                 json_obj = r.json()
@@ -212,11 +199,11 @@ def collection():
                 images.append(image)
                 titles.append(title)
 
-            zipped = zip(id_movie,images, titles)
+            zipped = zip(movie_id,images, titles)
 
             liste = list(zipped)
 
-        return render_template('pages/collection.html', id_movie=id_movie, liste=liste)
+        return render_template('pages/collection.html', movie_id=movie_id, liste=liste)
     else :
         return redirect(url_for('login'))
     
@@ -287,9 +274,9 @@ def login():
                     iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
                     {'username':username}).fetchone()
                 
-                    for id_user in iddata:
-                        session["id_user"] = id_user
-                        id_user = session["id_user"]
+                    for user_id in iddata:
+                        session["user_id"] = user_id
+                        user_id = session["user_id"]
 
                     return redirect(url_for("profile"))
                 else :
@@ -362,7 +349,7 @@ def profile():
 @app.route('/logout')
 def logout():
     session.pop("username", None)
-    session.pop("id_user", None)
+    session.pop("user_id", None)
     return redirect(url_for("login"))
 
 
