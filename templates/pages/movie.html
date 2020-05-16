@@ -60,7 +60,8 @@
                         <form action="" method="post">
                             <button type="submit" class="addBtn" name="btn" value="add">Ajouter à ma collection</button>
                         </form>
-                    {% else %}
+                    {% endif %}
+                    {% if message == 'True' %}
                         <form action="" method="post">
                             <button type="submit" class="addBtn" name="btn" value="del">Enlever de ma collection</button>
                         </form>

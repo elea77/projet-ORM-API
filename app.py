@@ -141,16 +141,19 @@ def movie(id):
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
-    id_user = session["id_user"]
+    message = 'Null'
 
-    # Verifier si le film fait parti de la collection 
-    iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id", 
-        { 'id':id, 'id_user':id_user}).fetchall()
+    if 'id_user' in session :
+        id_user = session["id_user"]
+
+        # Verifier si le film fait parti de la collection 
+        iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id", 
+            { 'id':id, 'id_user':id_user}).fetchall()
         
-    if iddata :
-        message = 'True' # Le film est deja dans la collection
-    else :
-        message = 'False' # Le film n'est pas dans la collection
+        if iddata :
+            message = 'True' # Le film est deja dans la collection
+        else :
+            message = 'False' # Le film n'est pas dans la collection
 
 
     # Ajout ou Suprression d'un film de sa collection
@@ -169,7 +172,6 @@ def movie(id):
 
                 favorite_movie = db.session.execute('DELETE FROM favorite_movie WHERE user_id=:id_user AND id_movie=:id', 
                 { 'id':id, 'id_user':id_user })
-
                 db.session.commit()
                 
         return redirect(url_for("collection"))
@@ -186,6 +188,7 @@ def collection():
         
         iddata = db.session.execute("SELECT id_movie FROM favorite_movie WHERE user_id=:id_user", 
             {'id_user':id_user}).fetchall()
+
         
         if not iddata :
             message = 'Votre collection est vide'
