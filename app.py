@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 
 UPLOAD_FOLDER = 'static/avatars/'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # Instancier notre application dont le nom est __main__
 app = Flask(__name__)
