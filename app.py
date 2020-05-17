@@ -234,8 +234,9 @@ def register():
             if emaildata == None :
 
                 if password == confirm:
-                    db.session.execute('INSERT INTO user(username, email, password) VALUES(:username, :email, :password)',
-                        { 'username':username, 'email':email, 'password':secure_password })
+                    
+                    register = User(username=username, email=email, password=secure_password)
+                    db.session.add(register)
                     db.session.commit()
 
                     return redirect(url_for('login'))
