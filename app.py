@@ -127,42 +127,39 @@ def movie(id):
         user_id = session["user_id"]
 
         # Verifier si le film fait parti de la collection 
-        iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id AND movie_id=:id", 
-            { 'id':id, 'user_id':user_id}).fetchone()
+        iddata = db.session.query(User_Movie).filter(User_Movie.user_id == user_id, User_Movie.movie_id == id ).first()
 
-        
-        
+
         if iddata :
             message = 'True' # Le film est deja dans la collection
         else :
             message = 'False' # Le film n'est pas dans la collection
 
-
-    # Ajout ou Suprression d'un film de sa collection
+    # Ajout ou Suppression d'un film de sa collection
     if request.method == "POST":
         if "user_id" in session:
             bouton = request.form.get('btn')
 
             if bouton == 'add' :
 
-                movie = db.session.execute("SELECT id FROM movie WHERE id=:id", 
-                    { 'id':id}).fetchone()
+                movie = db.session.query(Movie).filter(Movie.id == id ).first()
         
                 if not movie :
-                    db.session.execute('INSERT INTO movie(id, title, overview) VALUES(:id, :title, :overview)',
-                    { 'id':id, 'title':title, 'overview':overview })
+                    ajoutFilm = Movie(id=id, title=title, overview=overview)
+                    db.session.add(ajoutFilm)
+                    db.session.commit() 
 
-                db.session.execute('INSERT INTO user_movie(movie_id, user_id) VALUES(:id, :user_id)',
-                    { 'id':id, 'user_id':user_id })
-
-                db.session.commit()  
+                ajoutCollection = User_Movie(movie_id=id, user_id=user_id)
+                db.session.add(ajoutCollection)
+                db.session.commit()
 
             if bouton == 'del':
 
-                user_movie = db.session.execute('DELETE FROM user_movie WHERE user_id=:user_id AND movie_id=:id', 
-                { 'id':id, 'user_id':user_id })
+                deleteMovie = db.session.query(User_Movie).filter(User_Movie.movie_id == id, User_Movie.user_id == user_id ).first()
+                db.session.delete(deleteMovie)
                 db.session.commit()
-                
+
+
         return redirect(url_for("collection"))
 
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message)
@@ -175,7 +172,7 @@ def collection():
 
         user_id = session["user_id"]
         
-        # On select les films dans la collection de l'utilisateur
+        # On selectionne les films dans la collection de l'utilisateur
         iddata = db.session.query(User_Movie).filter(User_Movie.user_id == user_id).all()
 
         if not iddata :
@@ -189,7 +186,7 @@ def collection():
             x = 0
 
             for i in iddata:
-                
+
                 i = str(iddata[x].movie_id)
                 r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
                 json_obj = r.json()
@@ -331,8 +328,7 @@ def profile():
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                db.session.execute('UPDATE user SET avatar=:filename WHERE username=:username',
-                    { 'username':username, 'filename':filename })
+                db.session.query(User).filter(User.username == username).update({'avatar': filename})
                 db.session.commit()
 
                 return redirect(url_for('profile'))
