@@ -26,10 +26,10 @@ Bootstrap(app)
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    avatar = db.Column(db.String(120), server_default="avatar.png", nullable=False)
+    avatar = db.Column(db.String(150), server_default="avatar.png", nullable=False)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
@@ -130,7 +130,7 @@ def movie(id):
         iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id AND movie_id=:id", 
             { 'id':id, 'user_id':user_id}).fetchone()
 
-        # session.query (Movie) . 
+        
         
         if iddata :
             message = 'True' # Le film est deja dans la collection
@@ -156,7 +156,6 @@ def movie(id):
                     { 'id':id, 'user_id':user_id })
 
                 db.session.commit()  
-
 
             if bouton == 'del':
 
@@ -222,14 +221,13 @@ def register():
         confirm = request.form.get('confirm')
         secure_password = sha256_crypt.encrypt(str(password))
 
-        usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
-            {'username':username}).fetchone()
+        # On vérifie si le pseudo est disponible
+        usernamedata = db.session.query(User).filter(User.username == username).first()
 
-        
         if usernamedata == None :
 
-            emaildata = db.session.execute('SELECT email FROM user WHERE email=:email', 
-            {'email':email}).fetchone()
+            # On vérifie si l'email est disponible
+            emaildata = db.session.query(User).filter(User.email == email).first()
 
             if emaildata == None :
 
@@ -260,30 +258,26 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        usernamedata = db.session.execute('SELECT username FROM user WHERE username=:username', 
-            {'username':username}).fetchone()
+        data = db.session.query(User).filter(User.username == username).first()
+        usernamedata = data.username
 
         if usernamedata != None:
-            
-            passworddata = db.session.execute('SELECT password FROM user WHERE username=:username', 
-                {'username':username}).fetchone()
 
-            for password_data in passworddata:
-                if sha256_crypt.verify(password, password_data):
-                    flash("Vous êtes maintenant connecté !","success")
-                    session["username"] = username
+            passworddata = data.password
 
-                    iddata = db.session.execute("SELECT id FROM user WHERE username=:username", 
-                    {'username':username}).fetchone()
-                
-                    for user_id in iddata:
-                        session["user_id"] = user_id
-                        user_id = session["user_id"]
+            if sha256_crypt.verify(password, passworddata):
+                flash("Vous êtes maintenant connecté !","success")
+                session["username"] = username
 
-                    return redirect(url_for("profile"))
-                else :
-                    flash("Mot de passe incorrect","error")
-                    return redirect(url_for("login"))
+                user_id = data.id
+
+                session["user_id"] = user_id
+                user_id = session["user_id"]
+
+                return redirect(url_for("profile"))
+            else :
+                flash("Mot de passe incorrect","error")
+                return redirect(url_for("login"))
         else :
             flash("Pseudo inexistant","error")
             return redirect(url_for("login"))
