@@ -168,42 +168,43 @@ def movie(id):
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message)
 
 
-# Affichage des films de la collection <=> Favorite Movies
+# Affichage des films de la collection <=> table : user_movie
 @app.route('/collection')
 def collection():
     if "user_id" in session:
 
         user_id = session["user_id"]
         
-        iddata = db.session.execute("SELECT movie_id FROM user_movie WHERE user_id=:user_id", 
-            {'user_id':user_id}).fetchall()
+        # On select les films dans la collection de l'utilisateur
+        iddata = db.session.query(User_Movie).filter(User_Movie.user_id == user_id).all()
 
-        
         if not iddata :
             message = 'Votre collection est vide'
             return render_template('pages/collection.html', message=message)
         
         else:
-            for id_mov in iddata:
-
-                movie_id = [item['movie_id'] for item in iddata]
-
             images = []
             titles = []
-            for i in movie_id:
-                i = str(i)
+            movies = []
+            x = 0
+
+            for i in iddata:
+                
+                i = str(iddata[x].movie_id)
                 r = requests.get("https://api.themoviedb.org/3/movie/" + i + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
                 json_obj = r.json()
                 image = str(json_obj['poster_path'])
                 title = str(json_obj['title'])
                 images.append(image)
                 titles.append(title)
+                movies.append(i)
+                x +=1
 
-            zipped = zip(movie_id,images, titles)
+            zipped = zip(movies,images, titles)
 
             liste = list(zipped)
 
-        return render_template('pages/collection.html', movie_id=movie_id, liste=liste)
+        return render_template('pages/collection.html', movie_id=movies, liste=liste)
     else :
         return redirect(url_for('login'))
     
@@ -235,6 +236,7 @@ def register():
 
                 if password == confirm:
                     
+                    # Insertion SQL
                     register = User(username=username, email=email, password=secure_password)
                     db.session.add(register)
                     db.session.commit()
@@ -261,8 +263,10 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
+        # On vérifie que le pseudo existe
         data = db.session.query(User).filter(User.username == username).first()
 
+        # Si il existe ..
         if data != None:
             
             passworddata = data.password
@@ -304,26 +308,21 @@ def profile():
     if "username" in session:
         username = session["username"]
 
-        emaildata = db.session.execute("SELECT email FROM user WHERE username=:username", 
-            {'username':username}).fetchone()
+        # On récupère les données de l'utilisateur connecté
+        userdata = db.session.query(User).filter(User.username == username).first()
 
-        datedata = db.session.execute("SELECT date FROM user WHERE username=:username", 
-            {'username':username}).fetchone()
+        email = userdata.email
 
-        avatardata = db.session.execute("SELECT avatar FROM user WHERE username=:username", 
-            {'username':username}).fetchone()
+        date = userdata.date
 
-        for email in emaildata:
-            session["email"] = email
-            email = session["email"]
+        avatar = userdata.avatar
 
-        for date in datedata:
-            session["date"] = date
-            date = session["date"]
+        # On les enregistre dans la session
+        session["email"] = email
 
-        for avatar in avatardata:
-            session["avatar"] = avatar
-            avatar = session["avatar"]
+        session["date"] = date
+
+        session["avatar"] = avatar
 
         if request.method == 'POST':
             file = request.files['file']
