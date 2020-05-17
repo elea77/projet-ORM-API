@@ -224,11 +224,13 @@ def register():
         # On vérifie si le pseudo est disponible
         usernamedata = db.session.query(User).filter(User.username == username).first()
 
-        if usernamedata == None :
+        #Si le pseudo est disponible ..
+        if usernamedata == None : 
 
             # On vérifie si l'email est disponible
             emaildata = db.session.query(User).filter(User.email == email).first()
 
+            #Si l'email est disponible ..
             if emaildata == None :
 
                 if password == confirm:
@@ -259,25 +261,26 @@ def login():
         password = request.form.get('password')
 
         data = db.session.query(User).filter(User.username == username).first()
-        usernamedata = data.username
 
-        if usernamedata != None:
-
+        if data != None:
+            
             passworddata = data.password
 
-            if sha256_crypt.verify(password, passworddata):
-                flash("Vous êtes maintenant connecté !","success")
-                session["username"] = username
+            if passworddata != None :
 
-                user_id = data.id
+                if sha256_crypt.verify(password, passworddata):
+                    flash("Vous êtes maintenant connecté !","success")
+                    session["username"] = username
 
-                session["user_id"] = user_id
-                user_id = session["user_id"]
+                    user_id = data.id
 
-                return redirect(url_for("profile"))
-            else :
-                flash("Mot de passe incorrect","error")
-                return redirect(url_for("login"))
+                    session["user_id"] = user_id
+                    user_id = session["user_id"]
+
+                    return redirect(url_for("profile"))
+                else :
+                    flash("Mot de passe incorrect","error")
+                    return redirect(url_for("login"))
         else :
             flash("Pseudo inexistant","error")
             return redirect(url_for("login"))
