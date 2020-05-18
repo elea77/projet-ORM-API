@@ -233,6 +233,8 @@ def collection():
 #Affichage des informations d'un acteur
 @app.route('/actor/<id>', methods=["GET","POST"])
 def actor(id):
+
+    # Information de l'acteur
     r = requests.get("https://api.themoviedb.org/3/person/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r.json()
 
@@ -240,9 +242,21 @@ def actor(id):
     name = str(json_obj['name'])
     biography = str(json_obj['biography'])
     image = str(json_obj['profile_path']) 
+    print(biography)
+
+    if biography == '':
+        r3 = requests.get("https://api.themoviedb.org/3/person/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=en-US")
+        json_obj = r3.json()
+        biography = str(json_obj['biography'])
 
 
-    return render_template('pages/actor.html', id=id, name=name, biography=biography, image=image)
+    # Films dans les quel l'acteur a joué
+    r2 = requests.get("https://api.themoviedb.org/3/person/" + id + "/movie_credits?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r2.json()
+
+    films = list(json_obj['cast'])
+
+    return render_template('pages/actor.html', id=id, name=name, biography=biography, image=image, films=films)
 
 # Inscription
 @app.route('/register', methods=["GET","POST"])
