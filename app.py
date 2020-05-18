@@ -8,6 +8,7 @@ from passlib.hash import sha256_crypt
 import requests, json, datetime, random, os
 from werkzeug.utils import secure_filename
 from time import *
+from datetime import date, timedelta
 
 
 UPLOAD_FOLDER = 'static/avatars/'
@@ -231,8 +232,8 @@ def collection():
 
 
 #Affichage des informations d'un acteur
-@app.route('/actor/<id>', methods=["GET","POST"])
-def actor(id):
+@app.route('/person/<id>', methods=["GET","POST"])
+def person(id):
 
     # Information de l'acteur
     r = requests.get("https://api.themoviedb.org/3/person/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
@@ -242,8 +243,38 @@ def actor(id):
     name = str(json_obj['name'])
     biography = str(json_obj['biography'])
     image = str(json_obj['profile_path']) 
-    print(biography)
+    gender = int(json_obj['gender'])
+    birthday = str(json_obj['birthday'])
+    job = str(json_obj['known_for_department'])
 
+
+    # Pour le visuel
+    if job == 'Acting' and gender == 1:
+        job = 'Actrice'
+
+    if job == 'Acting' and gender == 2:
+        job = 'Acteur'
+
+    if job == 'Directing' and gender == 1:
+        job = 'Réalisatrice'
+
+    if job == 'Directing' and gender == 2:
+        job = 'Réalisateur'
+
+    if job == 'Production' and gender == 1:
+        job = 'Productrice'
+
+    if job == 'Production' and gender == 2:
+        job = 'Producteur'
+
+    if gender == 1:
+        gender = 'Femme'
+
+    if gender == 2:
+        gender = 'Homme'
+    
+
+    # Si il n'existe pas de biographie française, on prends celle en anglais
     if biography == '':
         r3 = requests.get("https://api.themoviedb.org/3/person/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=en-US")
         json_obj = r3.json()
@@ -256,7 +287,9 @@ def actor(id):
 
     films = list(json_obj['cast'])
 
-    return render_template('pages/actor.html', id=id, name=name, biography=biography, image=image, films=films)
+    return render_template('pages/person.html', id=id, name=name, biography=biography, image=image, films=films, gender=gender, job=job)
+
+
 
 # Inscription
 @app.route('/register', methods=["GET","POST"])

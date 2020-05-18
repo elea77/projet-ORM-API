@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Acteur{% endblock %}
+{% block title %}Personne{% endblock %}
 {%- block styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
@@ -32,7 +32,18 @@
         </div>
     </header>
     <div class="container">
-        <br><br>
+        
+        <div class="navf">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">{{ gender }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">{{ job }}</a>
+                </li>
+            </ul> 
+        </div> 
+
         <div class="contenu">
             <div>
                 {% if image == 'None' %}
