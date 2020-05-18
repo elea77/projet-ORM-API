@@ -75,7 +75,7 @@
         <div id="div-scroll">
             <div id="scrollmenu">
                 {% for distribution in distributions %}
-                        <img src="https://image.tmdb.org/t/p/w500{{ distribution.profile_path }}" class="actor" alt="image" onclick="location.href='/actor/{{ distribution.id }}'">
+                    <img src="https://image.tmdb.org/t/p/w500{{ distribution.profile_path }}" class="actor" style="color:white;" alt="{{ distribution.name }}" onclick="location.href='/actor/{{ distribution.id }}'">
                 {% endfor %}
             </div>
         </div>

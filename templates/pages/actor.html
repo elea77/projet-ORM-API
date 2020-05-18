@@ -32,7 +32,7 @@
         </div>
     </header>
     <div class="container">
-        <br>
+        <br><br>
         <div class="contenu">
             <div>
                 {% if image == 'None' %}
@@ -47,6 +47,17 @@
             </div>
         </div><br>
 
+        {% if not film == [] %}
+        <h3 style="color:white;">Films</h3>
+        <div id="div-scroll">
+            <div id="scrollmenu">
+                {% for film in films %}
+                    <img src="https://image.tmdb.org/t/p/w500{{ film.poster_path }}" style="color:white;" class="movie" alt="{{ film.title }}" onclick="location.href='/movie/{{ film.id }}'">
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} 
+        <br><br>
    </div>
 
         

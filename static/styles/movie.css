@@ -93,6 +93,11 @@ p {
     height:auto;
 }
 
-.actor:hover {
+.movie {
+    width: 10%;
+    height: auto;
+}
+
+.actor:hover, .movie:hover {
     cursor: pointer;
 }
