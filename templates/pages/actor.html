@@ -1,10 +1,10 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Recherche Film{% endblock %}
+{% block title %}Acteur{% endblock %}
 {%- block styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="../../static/styles/movieSearch.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/styles/movie.css" rel="stylesheet" type="text/css" />
     <link href="../../static/styles/navbar.css" rel="stylesheet" type="text/css" />
 {%- endblock styles %}
 
@@ -17,11 +17,6 @@
         <div class="nav-list-container">
             <nav class="header__nav">
                 <ul class="nav__list">
-
-                    <form action="movie_search" method="POST" class="form-inline">
-                        <input name="movie_title" class="form-control mr-sm-2" type="search" placeholder="Nom du film" aria-label="Search">
-                        <button class="btn btn-sm btn-outline-secondary my-2 my-sm-0" type="submit">Rechercher</button>
-                    </form>
 
                     <li class="nav__item"><a href="/">Accueil</a></li>
                     {% if session.username %}
@@ -36,20 +31,23 @@
             </nav>
         </div>
     </header>
-    <div class="container"><br>
-        <h3 style="color:white;">Éléments correspondant à la recherche "{{ recherche }}" :</h3><br>
-        <div id="grid">
-            {% for result in results %}
-                <ul>
-                    <a href="/movie/{{result.id}}">  
-                    <img src="https://image.tmdb.org/t/p/w500{{result.poster_path}}" alt="" width="60%">
-                    {% if not result.poster_path.strip %}
-                    <img src="{{url_for('static', filename='images/no_picture.jpg')}}" alt="">
-                    {% endif %}</a>
-                    <li>{{ result.title }}</li>
-                </ul>
-            {% endfor %}
-        </div>
-    </div> 
+    <div class="container">
+        <br>
+        <div class="contenu">
+            <div>
+                {% if image == 'None' %}
+                    <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                {% else %}
+                    <img src="https://image.tmdb.org/t/p/w500{{image}}" class="img" alt="image">
+                {% endif %}
+            </div>
+            <div class="texte">
+                <h1 class="title">{{ name }}</h1>
+                <p>{{ biography }}</p>
+            </div>
+        </div><br>
+
+   </div>
+
         
 {% endblock %}

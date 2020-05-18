@@ -7,6 +7,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from passlib.hash import sha256_crypt
 import requests, json, datetime, random, os
 from werkzeug.utils import secure_filename
+from time import *
 
 
 UPLOAD_FOLDER = 'static/avatars/'
@@ -99,7 +100,7 @@ def home():
 def movie_search():
 
     movie_title = request.form.get("movie_title")
-    r = requests.get("https://api.themoviedb.org/3/search/movie?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&query=" + movie_title + "&page=1&include_adult=false&region=fr")
+    r = requests.get("https://api.themoviedb.org/3/search/movie?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&query=" + movie_title + "&page=1&region=fr")
     json_obj = r.json()
     results = list(json_obj['results'])
 
@@ -120,13 +121,27 @@ def movie(id):
     genres = list(json_obj['genres'])
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
+    runtime = int(json_obj['runtime'])
+    runtime = runtime * 60
+    duree = strftime('%H h %M', gmtime(runtime))
 
     # Bande annonce du film
     r2 = requests.get("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
     json_obj = r2.json()
-    results = list(json_obj['results'])
+    videos = list(json_obj['results'])
 
-    print(results)
+
+    # Images du film
+    r3 = requests.get("https://api.themoviedb.org/3/movie/" + id + "/images?api_key=6590c29cf14027ffe0cf70d4c826f104")
+    json_obj = r3.json()
+    images = list(json_obj['backdrops'])
+
+
+    # Distribution
+    r4 = requests.get("https://api.themoviedb.org/3/movie/" + id + "/credits?api_key=6590c29cf14027ffe0cf70d4c826f104")
+    json_obj = r4.json()
+    distributions = list(json_obj['cast'])
+
 
     message = 'Null'
 
@@ -169,7 +184,7 @@ def movie(id):
 
         return redirect(url_for("collection"))
 
-    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message, results=results)
+    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message, videos=videos, images=images, duree=duree, distributions=distributions)
 
 
 # Affichage des films de la collection <=> table : user_movie
@@ -215,8 +230,21 @@ def collection():
     return render_template('pages/collection.html')
 
 
+#Affichage des informations d'un acteur
+@app.route('/actor/<id>', methods=["GET","POST"])
+def actor(id):
+    r = requests.get("https://api.themoviedb.org/3/person/" + id + "?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r.json()
+
+    # Récupération des infos de l'API
+    name = str(json_obj['name'])
+    biography = str(json_obj['biography'])
+    image = str(json_obj['profile_path']) 
 
 
+    return render_template('pages/actor.html', id=id, name=name, biography=biography, image=image)
+
+# Inscription
 @app.route('/register', methods=["GET","POST"])
 def register():
     if request.method == "POST":

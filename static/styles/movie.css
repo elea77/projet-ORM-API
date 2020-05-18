@@ -67,3 +67,32 @@ p {
 .addBtn:focus {
     outline: none;
 }
+
+
+#scrollmenu {   
+    display: flex;   
+    overflow-x: auto;
+}
+
+#scrollmenu img, #scrollmenu iframe {    
+    margin-right: 15px;
+}
+
+#scrollmenu::-webkit-scrollbar {    
+    display: none;
+}
+
+#div-scroll {   
+    display: flex;   
+    align-items: center;   
+    height: auto;
+}
+
+.actor {
+    width:10%;
+    height:auto;
+}
+
+.actor:hover {
+    cursor: pointer;
+}

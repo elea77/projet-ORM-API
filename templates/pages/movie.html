@@ -55,6 +55,7 @@
                 <p>{{ overview }}</p>
                 <p> Note : <br> {{ note }} / 10</p>
                 <p>Date de sortie : {{ date }}</p>
+                <p>{{ duree }}</p>
                 {% if session.username %}
                     {% if message == 'False' %}
                         <form action="" method="post">
@@ -69,9 +70,45 @@
                 {% endif %}
             </div>
         </div><br>
-        {% if not results == [] %}
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ results.0.key }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% if not distribution == [] %}
+        <h3 style="color:white;">Distribution</h3>
+        <div id="div-scroll">
+            <div id="scrollmenu">
+                {% for distribution in distributions %}
+                        <img src="https://image.tmdb.org/t/p/w500{{ distribution.profile_path }}" class="actor" alt="image" onclick="location.href='/actor/{{ distribution.id }}'">
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} 
+        
+        <br>
+
+        {% if not images == [] %}
+        <h3 style="color:white;">Images du film</h3>
+        <div id="div-scroll">
+            <div id="scrollmenu">
+                {% for image in images %}
+                    <img src="https://image.tmdb.org/t/p/w500{{ image.file_path }}" alt="image">
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} 
+        
+        <br>
+
+
+        {% if not videos == [] %}
+        <h2 style="color:white;">Bandes annonces du film</h2>
+        <div id="div-scroll">
+            <div id="scrollmenu">        
+                {% for video in videos %}
+                    <iframe height="70%" src="https://www.youtube.com/embed/{{ video.key }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe>
+                {% endfor %}
+            </div>
+        </div>
         {% endif %}
+        <br>
    </div>
+
         
 {% endblock %}
