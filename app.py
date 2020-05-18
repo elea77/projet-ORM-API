@@ -8,7 +8,6 @@ from passlib.hash import sha256_crypt
 import requests, json, datetime, random, os
 from werkzeug.utils import secure_filename
 from time import *
-from datetime import date, timedelta
 
 
 UPLOAD_FOLDER = 'static/avatars/'
