@@ -121,6 +121,13 @@ def movie(id):
     note = str(json_obj['vote_average'])
     date = str(json_obj['release_date'])
 
+    # Bande annonce du film
+    r2 = requests.get("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
+    json_obj = r2.json()
+    results = list(json_obj['results'])
+
+    print(results)
+
     message = 'Null'
 
     if 'user_id' in session :
@@ -162,7 +169,7 @@ def movie(id):
 
         return redirect(url_for("collection"))
 
-    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message)
+    return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message, results=results)
 
 
 # Affichage des films de la collection <=> table : user_movie

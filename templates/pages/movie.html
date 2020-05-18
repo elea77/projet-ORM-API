@@ -69,6 +69,9 @@
                 {% endif %}
             </div>
         </div><br>
+        {% if not results == [] %}
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ results.0.key }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% endif %}
    </div>
         
 {% endblock %}
