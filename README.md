@@ -34,8 +34,7 @@
 > python3 app.py
 
 ## Autres explications
-> Le MCD se trouve dans le dossier "documents"
-> Il est susceptible d'être amélioré par la suite
+> Dans le dossier documents se trouvent le MCD, le MLD et le powerpoint
 
 
 ### Activer MySQL sur Mac
