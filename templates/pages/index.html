@@ -104,7 +104,34 @@
             </div>
             {% endfor %}
         </div>
+
         <br><br>
+        
+        <h2> Prochaines sorties </h2><br>
+        
+        <div class="all">
+            {% for upcoming in upcomings %}
+                <div class="images">
+                    
+                    <a href="/movie/{{upcoming.id}}">
+                    <div class="categ">
+                        {% if not upcoming.poster_path.strip %}
+                            <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
+                        {% else %}
+                        <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="">
+                        {% endif %}
+                        <div class="text">
+                            <p>{{ upcoming.title }}</p>
+                        </div>
+                    </div>
+                    </a>  
+                    
+                </div>
+            {% endfor %}
+        </div>
+
+        <br><br>
+
         <h2> Les mieux notés </h2><br>
         
         <div class="all">
@@ -149,30 +176,6 @@
                 </a>  
                 
             </div>
-            {% endfor %}
-        </div>
-
-        <br><br>
-        <h2> Prochaines sorties </h2><br>
-        
-        <div class="all">
-            {% for upcoming in upcomings %}
-                <div class="images">
-                    
-                    <a href="/movie/{{upcoming.id}}">
-                    <div class="categ">
-                        {% if not upcoming.poster_path.strip %}
-                            <img src="{{url_for('static', filename='images/no_picture.jpg')}}" class="img"  alt="">
-                        {% else %}
-                        <img src="https://image.tmdb.org/t/p/w500{{upcoming.poster_path}}" alt="">
-                        {% endif %}
-                        <div class="text">
-                            <p>{{ upcoming.title }}</p>
-                        </div>
-                    </div>
-                    </a>  
-                    
-                </div>
             {% endfor %}
         </div>
     
