@@ -64,17 +64,16 @@ class User_Movie(db.Model):
 #Page d'accueil : index.html
 @app.route('/')
 def home():
-    titre = "Ceci est la page d'accueil du site"
-
-    # Liste des genres de film
-    r = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR")
-    json_obj = r.json()
-    genres = list(json_obj["genres"])
 
     # Liste des films à l'affiche
     r2 = requests.get("https://api.themoviedb.org/3/movie/now_playing?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
     json_obj = r2.json()
     now_playing = list(json_obj["results"])
+
+    # Liste des films bientot disponible
+    r5 = requests.get("https://api.themoviedb.org/3/movie/upcoming?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
+    json_obj = r5.json()
+    upcomings = list(json_obj["results"])
 
     # Liste des films les mieux notés
     r3 = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
@@ -86,12 +85,8 @@ def home():
     json_obj = r4.json()
     populars = list(json_obj["results"])
 
-    # Liste des films bientot disponible
-    r5 = requests.get("https://api.themoviedb.org/3/movie/upcoming?api_key=6590c29cf14027ffe0cf70d4c826f104&language=fr-FR&page=1&region=fr")
-    json_obj = r5.json()
-    upcomings = list(json_obj["results"])
 
-    return render_template('pages/index.html', titre=titre, genres=genres, now_playing=now_playing, tops=tops, populars=populars, upcomings=upcomings)
+    return render_template('pages/index.html', now_playing=now_playing, tops=tops, populars=populars, upcomings=upcomings)
 
 
 
@@ -148,16 +143,16 @@ def movie(id):
     if 'user_id' in session :
         user_id = session["user_id"]
 
-        # Verifier si le film fait parti de la collection 
+        # Verifier si le film fait parti de la maListe 
         iddata = db.session.query(User_Movie).filter(User_Movie.user_id == user_id, User_Movie.movie_id == id ).first()
 
 
         if iddata :
-            message = 'True' # Le film est deja dans la collection
+            message = 'True' # Le film est deja dans la maListe
         else :
-            message = 'False' # Le film n'est pas dans la collection
+            message = 'False' # Le film n'est pas dans la maListe
 
-    # Ajout ou Suppression d'un film de sa collection
+    # Ajout ou Suppression d'un film de sa maListe
     if request.method == "POST":
         if "user_id" in session:
             bouton = request.form.get('btn')
@@ -182,24 +177,24 @@ def movie(id):
                 db.session.commit()
 
 
-        return redirect(url_for("collection"))
+        return redirect(url_for("maListe"))
 
     return render_template('pages/movie.html', id=id, title=title, overview=overview, image = image, genres=genres, note=note, date=date, message=message, videos=videos, images=images, duree=duree, distributions=distributions)
 
 
-# Affichage des films de la collection <=> table : user_movie
-@app.route('/collection')
-def collection():
+# Affichage des films de la maListe <=> table : user_movie
+@app.route('/maListe')
+def maListe():
     if "user_id" in session:
 
         user_id = session["user_id"]
         
-        # On selectionne les films dans la collection de l'utilisateur
+        # On selectionne les films dans la maListe de l'utilisateur
         iddata = db.session.query(User_Movie).filter(User_Movie.user_id == user_id).all()
 
         if not iddata :
-            message = 'Votre collection est vide'
-            return render_template('pages/collection.html', message=message)
+            message = 'Votre maListe est vide'
+            return render_template('pages/maListe.html', message=message)
         
         else:
             images = []
@@ -223,11 +218,11 @@ def collection():
 
             liste = list(zipped)
 
-        return render_template('pages/collection.html', movie_id=movies, liste=liste)
+        return render_template('pages/maListe.html', movie_id=movies, liste=liste)
     else :
         return redirect(url_for('login'))
     
-    return render_template('pages/collection.html')
+    return render_template('pages/maListe.html')
 
 
 #Affichage des informations d'un acteur
@@ -360,7 +355,7 @@ def login():
                     session["user_id"] = user_id
                     user_id = session["user_id"]
 
-                    return redirect(url_for("profile"))
+                    return redirect(url_for("home"))
                 else :
                     flash("Mot de passe incorrect","error")
                     return redirect(url_for("login"))

@@ -20,7 +20,7 @@
 
                     <li class="nav__item"><a href="/">Accueil</a></li>
                     {% if session.username %}
-                    <li class="nav__item"><a href="/collection">Collection</a></li>
+                    <li class="nav__item"><a href="/maListe">Ma liste</a></li>
                     <li class="nav__item"><a href="/profile">Profil</a></li>
                     <li class="nav__item"><a href="/logout">Deconnexion</a></li>
                     {% else %}
@@ -59,12 +59,12 @@
                 {% if session.username %}
                     {% if message == 'False' %}
                         <form action="" method="post">
-                            <button type="submit" class="addBtn" name="btn" value="add">Ajouter à ma collection</button>
+                            <button type="submit" class="addBtn" name="btn" value="add">Ajouter à ma liste</button>
                         </form>
                     {% endif %}
                     {% if message == 'True' %}
                         <form action="" method="post">
-                            <button type="submit" class="addBtn" name="btn" value="del">Enlever de ma collection</button>
+                            <button type="submit" class="addBtn" name="btn" value="del">Enlever de ma liste</button>
                         </form>
                     {% endif %}
                 {% endif %}
